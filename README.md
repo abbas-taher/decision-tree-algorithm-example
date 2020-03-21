@@ -1,11 +1,12 @@
 ## Tutorial 101: Decision Tree 
 ### Understanding the Algorithm &amp; Simple Implementation Code  
 
-  The Decision-Tree [decisiontreee.py](/decisiontree.py?raw=true "Decision Tree") is a good example to learn how a mahcine learning algorithm works using the Python. Given input [**data1** & **data2**](/inputdata.py?raw=true "Input Data") the algorithm **createTree** generates a two decision trees which can be used for prediction purposes. The input data and the associated generated [decision trees](/output.trees?raw=true "Decision Tree") and their graph representation are depicted below. 
- 
+The Decision-Tree [decisiontreee.py](/decisiontree.py?raw=true "Decision Tree") is a good example to learn how one of the key mahcine learning algorithms work. For each of the input [**data1** & **data2**](/inputdata.py?raw=true "Input Data") the **createTree** algorithm  generates a decision tree that can be used for prediction purposes. The code presented is based on a modified version of the [original code](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in his book: **Machine Learning in Action**.
+
+Here shall take a deep dive into how the algorithm works and try to understand how it actually runs. The input data and the graph of the output [decision trees](/output.trees?raw=true "Decision Tree") are depicted in the diagram below. 
+
 <img src="/images/img-1.jpg" width="648" height="338">
 
-In this code sample we shall take a deep dive into how the algorithm works and try to uncover its implementation detail and how it actually runs. Please note that the code here is a modification of the [code](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) taken from Peter Harrington's book **Machine Learning in Action**.
 
 ## Contents:
 - How the Algorithm Works
