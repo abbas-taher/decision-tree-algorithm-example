@@ -1,9 +1,9 @@
 ## Tutorial 101: Decision Tree 
 ### Understanding the Algorithm &amp; Simple Implementation Code  
 
-The Decision-Tree [decisiontreee.py](/decisiontree.py?raw=true "Decision Tree") is a good example to learn how one of the key mahcine learning algorithms work. For each of the input [**data1** & **data2**](/inputdata.py?raw=true "Input Data") the **createTree** algorithm  generates a decision tree that can be used for prediction purposes. The code presented is based on a modified version of the [original code](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in his book: **Machine Learning in Action**.
+The Decision-Tree [decisiontreee.py](/decisiontree.py?raw=true "Decision Tree") is a good example to learn how one of the key mahcine learning algorithms work. The input [**data**](/inputdata.py?raw=true "Input Data") is used by the **createTree** algorithm  to generate a decision tree that can be used for prediction purposes. The data and code presented here is based on a modified version of the [original code](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in his book: **Machine Learning in Action**.
 
-Here shall take a deep dive into how the algorithm works and try to understand how it actually runs. The input data and the graph of the output [decision trees](/output.trees?raw=true "Decision Tree") are depicted in the diagram below. 
+In this discussion we shall take a deep dive into how the algorithm runs and try to understand its inner workings. The graph of the output [decision tree](/output.tree?raw=true "Decision Tree") is depicted in the diagram below. 
 
 <img src="/images/img-1.jpg" width="648" height="338">
 
@@ -17,11 +17,25 @@ Here shall take a deep dive into how the algorithm works and try to understand h
 - Part 3: Looping and Splitting into Subtrees
 
 ## How the Algorithm Works
-The Decision-Tree algorithm outputs a Python dictionary that represents a tree graph. The dataset contains 3 columns:
-a            f         f  
-==========   ========  ========
-ad            fs        df
+The dataset contains 3 columns non-surfacing and flippers which are two input feature and isfish which is the prediction label. 
 
+    non-surfacing  flippers  isfish  
+    ==========   ========  ========
+        1           1        yes
+        1           1        yes
+        1           0        no
+        1           1        yes
+        1           1        yes
+        1           1        yes
+        1           1        yes
+    dataSet = [[1, 1, 'yes'],
+               [1, 1, 'yes'],
+               [1, 0, 'no'],
+               [0, 1, 'no'],
+               [0, 1, 'no'],
+               [1, 1, 'maybe'],
+               [0, 0, 'maybe']]
+The Decision-Tree algorithm outputs a Python dictionary that represents a tree graph.
 two variables: non-surfacing which represents animals that do not need to surfaceIf we run the program with the input data (file) we get the following output: <br>
 
     # 
