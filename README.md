@@ -81,11 +81,14 @@ Looking at the tree (see above diagram) we clearly see that the root node first 
       - non-surfacing = 1
       - flippers = 1
 
-This test runs along the right most branch of the tree and terminates at the yes node at the bottom. Overall using a decision-tree is simple, you take any data record and start traversing the tree based on the values of the feature columns.  For example, the 7th data records: 
+This test runs along the right most branch of the tree and terminates at the yes node at the bottom. Overall using a decision-tree is simple, you take any data record and start traversing the tree based on the values of the feature columns.  For example, the two features of the 7th data records: 
  
-    [0, 0, 'maybe']
-
-is traversed using the left most branch of the tree because both of its columns are False (0).
+    [0, 0, 'maybe']   # 7th data records
+    non-surfacing = 0 ; flippers =0 
+    isFish = maybe
+    
+is traversed using the left most branch of the tree because both of its columns are False (0). In this case the terminating node is maybe
+   
 
 ## Creating Decsion Tree: How machine learning algorithm works
 following manner:
