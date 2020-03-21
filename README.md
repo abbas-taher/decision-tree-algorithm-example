@@ -17,24 +17,20 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
 - Part 3: Looping and Splitting into Subtrees
 
 ## How the Algorithm Works
-The dataset contains 3 columns non-surfacing and flippers which are two input feature and isfish which is the prediction label. 
+The dataset contains 7 records with two input feature columns: *non-surfacing* and *flippers* and a 3rd prediction label column: *isfish*
 
-    non-surfacing  flippers  isfish  
-    ==========   ========  ========
+     dataSet = [[1, 1, 'yes'], [1, 1, 'yes'], [1, 0, 'no'], [0, 1, 'no'], [0, 1, 'no'], [1, 1, 'maybe'], [0, 0, 'maybe']]
+     
+     non-surfacing     flippers      isfish  
+    ===============   ==========    ========
+       True(1)         True(1)        yes
+       True(1)         True(1)        yes
+       True( 1         False(0)       no
+       False(0)        True(1)        no
         1           1        yes
         1           1        yes
-        1           0        no
         1           1        yes
-        1           1        yes
-        1           1        yes
-        1           1        yes
-    dataSet = [[1, 1, 'yes'],
-               [1, 1, 'yes'],
-               [1, 0, 'no'],
-               [0, 1, 'no'],
-               [0, 1, 'no'],
-               [1, 1, 'maybe'],
-               [0, 0, 'maybe']]
+
 The Decision-Tree algorithm outputs a Python dictionary that represents a tree graph.
 two variables: non-surfacing which represents animals that do not need to surfaceIf we run the program with the input data (file) we get the following output: <br>
 
