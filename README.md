@@ -5,7 +5,7 @@ The Decision-Tree [decisiontreee.py](/decisiontree.py?raw=true "Decision Tree") 
 
 In this discussion we shall take a deep dive into how the algorithm runs and try to understand its inner workings. The graph of the output [decision tree](/output.tree?raw=true "Decision Tree") is depicted in the diagram below. 
 
-<img src="/images/decision-tree.PNG" width="788" height="472">
+<img src="/images/decision-tree.png" width="788" height="472">
 
 
 ## Contents:
