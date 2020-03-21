@@ -6,5 +6,5 @@ def createDataset():
                [0, 1, 'no'],
                [0, 1, 'maybe'],
                [1, 0, 'maybe']]
-    features = ['no surfacing','flippers']
+    features = ['non-surfacing','flippers']
     return dataSet, features
