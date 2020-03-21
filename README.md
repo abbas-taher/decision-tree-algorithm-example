@@ -1,7 +1,7 @@
 ## Tutorial 101: Decision Tree 
 ### Understanding the Algorithm &amp; Simple Implementation Code  
 
-  The Decision Tree [decisiontreee.python](/decisiontree.python?raw=true "Decision Tree") is a good example to learn how a mahcine learning algorithm works using the Python programming langauge. Given input **data1** & **data2* [input.data](/input.data?raw=true "Input Data") the algorithm **createTree** generates a two decision trees which can be used for prediction purposes. The two generated decision trees and their graph representation are depicted below. 
+  The Decision Tree [decisiontreee.python](/decisiontree.python?raw=true "Decision Tree") is a good example to learn how a mahcine learning algorithm works using the Python programming langauge. Given input **data1** & **data2** [input.data](/input.data?raw=true "Input Data") the algorithm **createTree** generates a two decision trees which can be used for prediction purposes. The two generated decision trees and their graph representation are depicted below. 
  
 <img src="/images/img-1.jpg" width="648" height="338">
 
