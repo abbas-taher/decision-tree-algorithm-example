@@ -9,6 +9,7 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
 
 
 ## Contents:
+- Dataset Description
 - How the Algorithm Works
 - Running the Decision-Tree Program in Python
 - Part 1: Reading the Data File
@@ -16,23 +17,27 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
 - Part 3: Creating Tree - Choosing Tree Root
 - Part 3: Looping and Splitting into Subtrees
 
-## How the Algorithm Works
-The dataset contains 7 records with two input feature columns: *non-surfacing* and *flippers* and a 3rd prediction label column: *isfish*
+## Dataset Description
+The dataset contains records for 7 species, 2 of which are fish, 3 are not and 2 maybe. The data contains two input feature columns: *non-surfacing* and *flippers* and a 3rd prediction label column: *isfish*. (Note non-surfacing means the specie can survive without coming to surface of the water) 
 
-     dataSet = [[1, 1, 'yes'], [1, 1, 'yes'], [1, 0, 'no'], [0, 1, 'no'], [0, 1, 'no'], [1, 1, 'maybe'], [0, 0, 'maybe']]
+     dataSet = [[1, 1, 'yes'], [1, 1, 'yes'], 
+                [1, 0, 'no'],  [0, 1, 'no'],  [0, 1, 'no'], 
+                [1, 1, 'maybe'], [0, 0, 'maybe']]
      
      non-surfacing     flippers      isfish  
     ===============   ==========    ========
        True(1)         True(1)        yes
        True(1)         True(1)        yes
-       True( 1         False(0)       no
+       
+       True(1)         False(0)       no
        False(0)        True(1)        no
-        1           1        yes
-        1           1        yes
-        1           1        yes
+       False(0)        True(1)        no
+       
+       True(1)         True(1)        maybe
+       False(1)        False(0)       maybe
 
-The Decision-Tree algorithm outputs a Python dictionary that represents a tree graph.
-two variables: non-surfacing which represents animals that do not need to surfaceIf we run the program with the input data (file) we get the following output: <br>
+## How the Algorithm Works
+The algorithm outputs a Python dictionary that represents a graph tree. If we run the program with the input data (file) we get the following output: <br>
 
     # 
     {'non-surfacing': {0: {'flippers': {0: 'maybe', 1: 'no'}}, 1: {'flippers': {0: 'no', 1: 'yes'}}}} 
@@ -51,27 +56,37 @@ two variables: non-surfacing which represents animals that do not need to surfac
       | | 
       |    
  
-Looking at the dict generated from data2 we clearly see we have no-surface see we have _1 has the highest page rank followed by URL_4 and then URL_3 & last URL_2. The algorithm works in the following manner:
+Looking at the output tree we clearly see that the root node first tests whether the specie is non-surfacing. Then it tests in each case (True or False) if the specie has flippers. For example, a specie isFish if and only if:
+    # isFish = yes    
+       if-and-only-if
+           non-surfacing = 1
+           flippers = 1
+
+This test runs along the right most branch of the tree and terminates at the yes node at the bottom. 
+
+Overall the algorithm works in the following manner:
 
 - If a URL (page) is referenced the most by other URLs then its rank increases, because being referenced means that it is important which is the case of URL_1. 
 - If an important URL like URL_1 references other URLs like URL_4 this will increase the destination’s ranking
 
 Given the above it becomes obvious why URL_4's ranking is higher than the other two URL_2 & URL_3. If we look at the various arrows in the above diagram we can also see that URL_2 is referenced the least and that is why it gets the lowest ranking.
 
-The rest of the article will take a deeper look at the Scala code that implements the algorithm in Spark 2.0. The code looks deceivingly simple but to understand how things actually work requires a deeper understanding of Spark RDDs, Spark's Scala based functional API, as well as Page Ranking formula. The code is made of 3 main parts as shown in the diagram below. The 1st part reads the data file then each URL is given a seed value in rank0. The third part of the code contains the main loop which calculates the contributions by joining the links and ranks data at each iteration and then recalculates the ranks based on that contribution. 
+The rest of the article will take a deeper look at the Python code that implements the algorithm. The code looks deceivingly simple but to understand how things actually work requires a deeper understanding of recursion, Python's list spliting, as well as Entropy formula. The code is made of 3 main parts as shown in the diagram below. The 1st part reads the data file then each URL is given a seed value in rank0. The third part of the code contains the main loop which calculates the contributions by joining the links and ranks data at each iteration and then recalculates the ranks based on that contribution. 
 
 <img src="/images/img-2.jpg" width="806" height="594">
 
 ## Running the PageRank Program in Spark
-To run the PageRank program you need to pass the class name, jar location, input data file and number of iterations. The command looks like the following (please refer to the [Project Setup Article](https://github.com/abbas-taher/scala-eclipse-spark-hortonwork-project-setup): 
+To execute the Decision-Tree program you can just run the main function using the Python command line call:
 
-      $ cd /usr/hdp/current/spark2-client
-      $ export SPARK_MAJOR_VERSION=2
-      $ ./bin/spark-submit --class com.scalaproj.SparkPageRank --master yarn --num-executors 1 --driver-memory 512m --executor-memory 512m --executor-cores 1 ~/testing/jars/page-rank.jar /input/urldata.txt 20  
+      $ python decisiontree.py
+      
+Or you can execute it from within the Python console using the following commands: 
+
+      $ python 
+      >>> import decisiontree
+      >>> import   
  
-In case you would like to use the bash command that comes with Spark you can run the example with the following:
 
-      $ ./bin/run-example SparkPageRank /input/urldata.txt 20
 
 ## Part 1: Reading the Data File
 The code for the 1st part of the program is as follows:
