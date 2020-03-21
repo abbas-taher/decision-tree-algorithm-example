@@ -1,18 +1,19 @@
 ## Tutorial 101: Decision Tree 
 ### Understanding the Algorithm &amp; Simple Implementation Code  
 
-  The Decision Tree [decisiontreee.python](/decisiontree.python?raw=true "Decision Tree") is a good example to learn how a mahcine learning algorithm works using the Python programming langauge. Given input **data1** & **data2** [input.data](/input.data?raw=true "Input Data") the algorithm **createTree** generates a two decision trees which can be used for prediction purposes. The two generated decision trees and their graph representation are depicted below. 
+  The Decision Tree [decisiontreee.python](/decisiontree.py?raw=true "Decision Tree") is a good example to learn how a mahcine learning algorithm works using the Python programming langauge. Given input **data1** & **data2** [input.data](/inputdata.py?raw=true "Input Data") the algorithm **createTree** generates a two decision trees which can be used for prediction purposes. The two generated [decision trees](/output.tree?raw=true "Decision Tree")and their graph representation are depicted below. 
  
 <img src="/images/img-1.jpg" width="648" height="338">
 
-In a [previous article](https://github.com/abbas-taher/scala-eclipse-spark-hortonwork-project-setup) I have described the steps required to setup the project in Scala IDE for Eclipse and run the code on Hortonworks 2.5 Sandbox. Here we shall take a deep dive into how the algorithm works and try to uncover its implementation detail and how it actually runs. 
+In this code sample we shall take a deep dive into how the algorithm works and try to uncover its implementation detail and how it actually runs. Please note that the code here is a modification of the [code](https://github.com/pbharrin/machinelearninginaction/blob/master/Ch03/trees.py) taken from Peter Harrington's book Machine Learning in Action.
 
 ## Contents:
 - How the Algorithm Works
-- Running the PageRank Program in Spark
+- Running the Decision-Tree Program in Python
 - Part 1: Reading the Data File
-- Part 2: Populating the Ranks Data - Initial Seeds
-- Part 3: Looping and Calculating Contributions & Recalcualting Ranks
+- Part 2: Calculating Entropy
+- Part 3: Creating Tree - Choosing Tree Root
+- Part 3: Looping and Splitting into Subtrees
 
 ## How the Algorithm Works
 The PageRank algorithm outputs a probability distribution that represents the likelihood that a person randomly clicking on web links will arrive at a particular web page. If we run the PageRank program with the input data file and indicate 20 iterations we shall get the following output: <br>
