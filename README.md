@@ -17,13 +17,29 @@ Here shall take a deep dive into how the algorithm works and try to understand h
 - Part 3: Looping and Splitting into Subtrees
 
 ## How the Algorithm Works
-The Decision-Tree algorithm outputs a Python dictionary that represents a decision tree graph that can be used to make predictions. If we run the Decision-Tree program with the input data (file) we shall get the following output: <br>
+The Decision-Tree algorithm outputs a Python dictionary that represents a tree graph. The dataset contains 3 columns:
+a            f         f  
+==========   ========  ========
+ad            fs        df
 
-     # using data2
-     url_4 has rank: 1.3705281840649928.
+two variables: non-surfacing which represents animals that do not need to surfaceIf we run the program with the input data (file) we get the following output: <br>
+
+    # 
+    {'non-surfacing': {0: {'flippers': {0: 'maybe', 1: 'no'}}, 1: {'flippers': {0: 'no', 1: 'yes'}}}} 
      
-     # using data2
-     aasd
+     non-surfacing: 
+      | 0: 
+      | | flippers: 
+      | | | 0: maybe
+      | | | 1: no
+      | | 
+      | 
+      | 1: 
+      | | flippers: 
+      | | | 0: no
+      | | | 1: yes
+      | | 
+      |    
  
 Looking at the dict generated from data2 we clearly see we have no-surface see we have _1 has the highest page rank followed by URL_4 and then URL_3 & last URL_2. The algorithm works in the following manner:
 
