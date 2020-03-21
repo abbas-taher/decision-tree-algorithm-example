@@ -1,11 +1,11 @@
 ## Tutorial 101: Decision Tree 
 ### Understanding the Algorithm &amp; Simple Implementation Code  
 
-  The Decision Tree [decisiontreee.python](/decisiontree.py?raw=true "Decision Tree") is a good example to learn how a mahcine learning algorithm works using the Python programming langauge. Given input **data1** & **data2** [input.data](/inputdata.py?raw=true "Input Data") the algorithm **createTree** generates a two decision trees which can be used for prediction purposes. The two generated [decision trees](/output.tree?raw=true "Decision Tree")and their graph representation are depicted below. 
+  The Decision-Tree [decisiontreee.py](/decisiontree.py?raw=true "Decision Tree") is a good example to learn how a mahcine learning algorithm works using the Python. Given input **data1** & **data2** [input.data](/inputdata.py?raw=true "Input Data") the algorithm **createTree** generates a two decision trees which can be used for prediction purposes. The input data and the associated generated [decision trees](/output.trees?raw=true "Decision Tree") and their graph representation are depicted below. 
  
 <img src="/images/img-1.jpg" width="648" height="338">
 
-In this code sample we shall take a deep dive into how the algorithm works and try to uncover its implementation detail and how it actually runs. Please note that the code here is a modification of the [code](https://github.com/pbharrin/machinelearninginaction/blob/master/Ch03/trees.py) taken from Peter Harrington's book Machine Learning in Action.
+In this code sample we shall take a deep dive into how the algorithm works and try to uncover its implementation detail and how it actually runs. Please note that the code here is a modification of the [code](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) taken from Peter Harrington's book **Machine Learning in Action**.
 
 ## Contents:
 - How the Algorithm Works
@@ -16,14 +16,15 @@ In this code sample we shall take a deep dive into how the algorithm works and t
 - Part 3: Looping and Splitting into Subtrees
 
 ## How the Algorithm Works
-The PageRank algorithm outputs a probability distribution that represents the likelihood that a person randomly clicking on web links will arrive at a particular web page. If we run the PageRank program with the input data file and indicate 20 iterations we shall get the following output: <br>
+The Decision-Tree algorithm outputs a Python dictionary that represents a decision tree graph that can be used to make predictions. If we run the Decision-Tree program with the input data (file) we shall get the following output: <br>
 
+     # using data2
      url_4 has rank: 1.3705281840649928.
-     url_2 has rank: 0.4613200524321036.
-     url_3 has rank: 0.7323900229505396.
-     url_1 has rank: 1.4357617405523626.
+     
+     # using data2
+     aasd
  
-The results clearly indicates that URL_1 has the highest page rank followed by URL_4 and then URL_3 & last URL_2. The algorithm works in the following manner:
+Looking at the dict generated from data2 we clearly see we have no-surface see we have _1 has the highest page rank followed by URL_4 and then URL_3 & last URL_2. The algorithm works in the following manner:
 
 - If a URL (page) is referenced the most by other URLs then its rank increases, because being referenced means that it is important which is the case of URL_1. 
 - If an important URL like URL_1 references other URLs like URL_4 this will increase the destination’s ranking
