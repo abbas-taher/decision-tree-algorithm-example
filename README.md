@@ -1,5 +1,5 @@
 ## Tutorial 101: Decision Tree 
-### Understanding the Algorithm &amp; Simple Implementation Code  
+### Understanding the Algorithm: Simple Implementation Code  
 
 The Decision-Tree code ([decisiontreee.py](/decisiontree.py?raw=true "Decision Tree")) is a good Python example to learn how one of the key machine learning algorithms work. The input [**data**](/inputdata.py?raw=true "Input Data") is used by the **createTree** algorithm to generate a decision tree that can be used for prediction purposes. The data and code presented here are partially based on an [original version](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) that appeared in chapter 3 of Peter Harrington's book: **Machine Learning in Action**.
 
@@ -9,16 +9,31 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
 
 
 ## Contents:
-- Dataset Description
-- Output Tree
-- How the Algorithm Works
-- Running the Decision-Tree Program in Python
-- Part 1: Reading the Data File
+- Running the Decision-Tree Program
+- Input Dataset Description
+- Program Output: The Decision Tree dict
+- Traversing Decision Tree: Case Example
+- Creating Decsion Tree: How machine learning algorithm works
+- Part 1: Calculating Entropy
 - Part 2: Calculating Entropy
 - Part 3: Creating Tree - Choosing Tree Root
 - Part 3: Looping and Splitting into Subtrees
 
-## Dataset Description
+## Running the Decision-Tree Program
+To execute the main program you can just run the decisiontree.py file using call to Python via command line:
+
+      $ python decisiontree.py
+      
+Or you can execute it from within the Python console using the following commands: 
+
+      $ python 
+      >>> import decisiontree
+      >>> import inputdata
+      >>> dataset, features = inputdata.createDataset()
+      >>> tree = decisiontree.createTree(dataset, features)
+      >>> decisiontree.printTree(tree)
+      
+## Input Dataset Description
 The dataset contains records for 7 species, 2 of which are fish, 3 are not and 2 maybe. The data contains two input feature columns: *non-surfacing* and *flippers* and a 3rd prediction label column: *isfish*. (Note non-surfacing means the specie can survive without coming to surface of the water) 
 
      dataSet = [[1, 1, 'yes'], [1, 1, 'yes'], 
@@ -37,10 +52,10 @@ The dataset contains records for 7 species, 2 of which are fish, 3 are not and 2
        True(1)         True(1)        maybe
        False(1)        False(0)       maybe
 
-## Output Tree
-The algorithm outputs a Python dictionary that represents a graph tree. If we run the program with the input data (file) we get the following output: <br>
+## Program Output: The Decision Tree dict
+The machine learning algorithm outputs a Python dictionary that represents a graph tree. If we run the program with the input data (file) we get the following output (which is idential to the above tree diagram) : <br>
 
-    # 
+    # output as dict
     {'non-surfacing': {0: {'flippers': {0: 'maybe', 1: 'no'}}, 1: {'flippers': {0: 'no', 1: 'yes'}}}} 
      
      non-surfacing: 
@@ -57,18 +72,24 @@ The algorithm outputs a Python dictionary that represents a graph tree. If we ru
       | | 
       |    
 
+## Traversing Decision Tree: Case example
+Here we shall explain how the decision tree relates to the input data and in the following section we shall describe how the tree is created by the machine learning algorithm. 
 
+Looking at the tree (see above diagram) we clearly see that the root node first tests whether the specie is non-surfacing. Then it tests in each case (True or False) if the specie has flippers. There are 4 possible decision cases: maybe, no, no, yes each can be reached based on the given input data. For example:
 
-## How the Algorithm Works
-Looking at the output tree we clearly see that the root node first tests whether the specie is non-surfacing. Then it tests in each case (True or False) if the specie has flippers. For example, a specie isFish if and only if:
-    # isFish = yes    
-       if-and-only-if
-           non-surfacing = 1
-           flippers = 1
+    A specie isFish = Yes if and only if:
+      - non-surfacing = 1
+      - flippers = 1
 
-This test runs along the right most branch of the tree and terminates at the yes node at the bottom. 
+This test runs along the right most branch of the tree and terminates at the yes node at the bottom. Overall using a decision-tree is simple, you take any data record and start traversing the tree based on the values of the feature columns.  For example, the 7th data records: 
+ 
+    [0, 0, 'maybe']
 
-Overall the algorithm works in the following manner:
+is traversed using the left most branch of the tree because both of its columns are False (0).
+
+## Creating Decsion Tree: How machine learning algorithm works
+following manner:
+ - Each input data is first spit into its feature columns and since the root node in the tree tests the non-surfacing
 
 - If a URL (page) is referenced the most by other URLs then its rank increases, because being referenced means that it is important which is the case of URL_1. 
 - If an important URL like URL_1 references other URLs like URL_4 this will increase the destination’s ranking
@@ -77,45 +98,24 @@ Given the above it becomes obvious why URL_4's ranking is higher than the other 
 
 The rest of the article will take a deeper look at the Python code that implements the algorithm. The code looks deceivingly simple but to understand how things actually work requires a deeper understanding of recursion, Python's list spliting, as well as Entropy formula. The code is made of 3 main parts as shown in the diagram below. The 1st part reads the data file then each URL is given a seed value in rank0. The third part of the code contains the main loop which calculates the contributions by joining the links and ranks data at each iteration and then recalculates the ranks based on that contribution. 
 
-<img src="/images/img-2.jpg" width="806" height="594">
+## Part 1: Calculating Entropy
+The code for the calculating entropy in the program is as follows:
 
-## Running the Decision-Tree Program
-To execute the main program you can just run the decisiontree.py file using call to Python via command line:
-
-      $ python decisiontree.py
-      
-Or you can execute it from within the Python console using the following commands: 
-
-      $ python 
-      >>> import decisiontree
-      >>> import inputdata
-      >>> dataset, features = inputdata.createDataset()
-      >>> tree = decisiontree.createTree(dataset, features)
-      >>> decisiontree.printTree(tree)
- 
-
-
-## Part 1: Reading the Data File
-The code for the 1st part of the program is as follows:
-
-     (1)    val iters = if (args.length > 1) args(1).toInt else 10   // sets iteration from argument (in our case iter=20)
-     (2)    val lines = spark.read.textFile(args(0)).rdd   // read text file into Dataset[String] -> RDD1
-            val pairs = lines.map{ s =>
-     (3)         val parts = s.split("\\s+")               // Splits a line into an array of 2 elements according space(s)
-     (4)              (parts(0), parts(1))                 // create the parts<url, url> for each line in the file
-                  }
-     (5)    val links = pairs.distinct().groupByKey().cache()   // RDD1 <string, string> -> RDD2<string, iterable>   
+       def calculateEntropy(dataSet):
+           counter= defaultdict(int)   # number of unique labels and their frequency
+     (1)   for vector in dataSet:      
+               label = vector[-1]      # always assuming last column is the label column 
+               counter[label] += 1
+           entropy = 0.0
+     (2)   for key in counter:
+               probability = counter[key]/len(dataSet)     # len(dataSet) = total number of entries 
+               entropy -= probability * log(prob,2)        # log base 2
+           return entropy 
 
 The 2nd line of the code reads the input data file and produce a Dataset of strings which are then transformed into an RDD with each line in the file being one entire string within the RDD. You can think of an RDD as a list that is special to Spark because the data within the RDD is distributed among the various nodes. Note that I have introduced a "pairs" variable into the original code to make the program more readable.
 
-In the 3rd line of the code, the split command generates for each line (one entire string) an array with two elements. In the 4th line each of the two elements of the array are accessed and then used to produce a key/value pair. The last line in the code applies the groupByKey command on the key/value pair RDD to produce the links RDD, which is also a key/value pair. Thus, the resultant links RDD for the input data file will be as follows:<br>
+In the 3rd line of the code, the split command generates for each line (one entire string) an array with two elements. In the 4th line each of the two elements of the array are accessed and then used to produce a key/value pair. The last line in the code applies the groupByKey command on the key/value pair RDD to produce the links RDD, which is also a key/value pair. 
 
-&nbsp; Key   &emsp;    Array (Iter)
-<br> &nbsp; url_4  &emsp;   [url_3, url_1]
-<br> &nbsp; url_3  &emsp;   [url_2, url_1]
-<br> &nbsp; url_2   &emsp;  [url_1]
-<br> &nbsp; url_1   &emsp;  [url_4]
- 
 Note that the Array in the above is not a true array it is actually an iterator on the resultant array of urls. This is what the groupByKey command produces when applied on an RDD. This is an important and powerful construct in Spark and every programmer needs to understand it well so that they can use it correctly in their code..
 
 ## Part 2: Populating the Ranks Data - Initial Seeds 
