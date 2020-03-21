@@ -1,7 +1,7 @@
 ## Tutorial 101: Decision Tree 
 ### Understanding the Algorithm &amp; Simple Implementation Code  
 
-The Decision-Tree code ([decisiontreee.py](/decisiontree.py?raw=true "Decision Tree")) is a good Python example to learn how one of the key mahcine learning algorithms work. The input [**data**](/inputdata.py?raw=true "Input Data") is used by the **createTree** algorithm to generate a decision tree that can be used for prediction purposes. The data and code presented here is based on a modified version of the [original code](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in his book: **Machine Learning in Action**.
+The Decision-Tree code ([decisiontreee.py](/decisiontree.py?raw=true "Decision Tree")) is a good Python example to learn how one of the key machine learning algorithms work. The input [**data**](/inputdata.py?raw=true "Input Data") is used by the **createTree** algorithm to generate a decision tree that can be used for prediction purposes. The data and code presented here are partially based on an [original version](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) that appeared in chapter 3 of Peter Harrington's book: **Machine Learning in Action**.
 
 In this discussion we shall take a deep dive into how the algorithm runs and try to understand its inner workings. The graph of the output [decision tree](/output.tree?raw=true "Decision Tree") is depicted in the diagram below. 
 
@@ -10,6 +10,7 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
 
 ## Contents:
 - Dataset Description
+- Output Tree
 - How the Algorithm Works
 - Running the Decision-Tree Program in Python
 - Part 1: Reading the Data File
@@ -36,7 +37,7 @@ The dataset contains records for 7 species, 2 of which are fish, 3 are not and 2
        True(1)         True(1)        maybe
        False(1)        False(0)       maybe
 
-## How the Algorithm Works
+## Output Tree
 The algorithm outputs a Python dictionary that represents a graph tree. If we run the program with the input data (file) we get the following output: <br>
 
     # 
@@ -55,7 +56,10 @@ The algorithm outputs a Python dictionary that represents a graph tree. If we ru
       | | | 1: yes
       | | 
       |    
- 
+
+
+
+## How the Algorithm Works
 Looking at the output tree we clearly see that the root node first tests whether the specie is non-surfacing. Then it tests in each case (True or False) if the specie has flippers. For example, a specie isFish if and only if:
     # isFish = yes    
        if-and-only-if
@@ -75,8 +79,8 @@ The rest of the article will take a deeper look at the Python code that implemen
 
 <img src="/images/img-2.jpg" width="806" height="594">
 
-## Running the PageRank Program in Spark
-To execute the Decision-Tree program you can just run the main function using the Python command line call:
+## Running the Decision-Tree Program
+To execute the main program you can just run the decisiontree.py file using call to Python via command line:
 
       $ python decisiontree.py
       
@@ -84,7 +88,10 @@ Or you can execute it from within the Python console using the following command
 
       $ python 
       >>> import decisiontree
-      >>> import   
+      >>> import inputdata
+      >>> dataset, features = inputdata.createDataset()
+      >>> tree = decisiontree.createTree(dataset, features)
+      >>> decisiontree.printTree(tree)
  
 
 
