@@ -118,7 +118,7 @@ The code for calculating Entropy for the labels in a given dataset:
 
 There are two main loops in the function. The 1st loop just calculates the frequency of each label in the given dataset and the 2nd loop calculates the entropy of those labels according to the following formula:
  
-&nbsp; &nbsp; &nbsp; H(X) = - &sum <sub>i</sub>; P<sub>X</sub>(x<sub>i</sub>); log<sub>b</sub>(P<sub>X</sub>(x<sub>i</sub>))
+&nbsp; &nbsp; &nbsp; H(X) = - &sum<sub>i</sub>; P<sub>X</sub>(x<sub>i</sub>) log<sub>b</sub>(P<sub>X</sub>(x<sub>i</sub>))
 
 The Entropy H(X) for a given variable X with possible values x<sub>i</sub>, is the sum of multiplying the probability value P<sub>X</sub>(x<sub>i</sub>) with the log of that same probability value. In our algorithm we are using the log base 2 to do the calculation. 
 
