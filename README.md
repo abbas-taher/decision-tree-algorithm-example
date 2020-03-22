@@ -103,7 +103,7 @@ In each call of the *createTree* function, the algorithm searches for patterns i
 The rest of the article will take a deeper look at the Python code that implements the algorithm. The code looks deceivingly simple but to understand how things actually work requires a deeper understanding of recursion, Python's list spliting, as well as understanding the **Entropy** formula. 
 
 ## Part 1: Calculating Entropy
-The code for calculating Entropy is given here:
+The code for calculating Entropy for the labels in a given dataset:
 
        def calculateEntropy(dataSet):
            counter= defaultdict(int)   # number of unique labels and their frequency
@@ -112,18 +112,30 @@ The code for calculating Entropy is given here:
                counter[label] += 1
            entropy = 0.0
      (2)   for key in counter:
-               probability = counter[key]/len(dataSet)     # len(dataSet) = total number of entries 
-               entropy -= probability * log(prob,2)        # log base 2
+               probability = counter[key]/len(dataSet)       # len(dataSet) = total number of entries 
+               entropy -= probability * log(probability,2)   # log base 2
            return entropy 
 
-There are two main loops in the function. The 1st loop just calculates the frequency of each label in the given dataset and the 2nd loop calculates the entropy according to the following formula:
+There are two main loops in the function. The 1st loop just calculates the frequency of each label in the given dataset and the 2nd loop calculates the entropy of those labels according to the following formula:
  
-H(X) = - &sum;<sub>i</sub>P<sub>X</sub>(x<sub>i</sub>) log<sub>b</sub> P<sub>X</sub>(x<sub>i</sub>)
+H(X) = - &sum; <sub>i</sub>P<sub>X</sub>(x<sub>i</sub>); log<sub>b</sub>(P<sub>X</sub>(x<sub>i</sub>))
 
-The H(X) for a given variable X with its possible values x<sup>i</sup>, each with probability P<sup>X</sup>(x<sup>i</sup>), the entropy is as follows:
+The Entropy H(X) for a given variable X with possible values x<sup>i</sup>, is the sum of multiplying the probability value P<sup>X</sup>(x<sup>i</sup>) with the log of that same probability value. In our algorithm we are using the log base 2 to do the calculation. 
 
+The fact that the formula depends on probability to the computation, Entropy measures the randomness in a given set of labels. The higher the Entropy the more random there is in the given labels. For example, if we take the whole seven records and measure Entropy for the last column (isFish label) we get: 
 
-Note that the Array in the above is not a true array it is actually an iterator on the resultant array of urls. This is what the groupByKey command produces when applied on an RDD. This is an important and powerful construct in Spark and every programmer needs to understand it well so that they can use it correctly in their code..
+      $ python
+      >>> from decisiontree import *
+      >>> dataset, features = createDataset()
+      >>> entropy_all = calculateEntropy(dataset)
+      >>> print (entropy_all)
+      1.5566567074628228
+      
+If we drop the last two *maybe* labels we get:
+
+      >>> entropy_some = calculateEntropy(dataset[:-2])
+      >>> print (entropy_some)
+      0.9709505944546686
 
 ## Part 2: Populating the Ranks Data - Initial Seeds 
  
