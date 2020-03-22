@@ -118,9 +118,9 @@ The code for calculating Entropy for the labels in a given dataset:
 
 There are two main loops in the function. The 1st loop just calculates the frequency of each label in the given dataset and the 2nd loop calculates the entropy of those labels according to the following formula:
  
-H(X) = - &sum; <sub>i</sub>P<sub>X</sub>(x<sub>i</sub>); log<sub>b</sub>(P<sub>X</sub>(x<sub>i</sub>))
+&nbsp; &nbsp; &nbsp; H(X) = - &sum <sub>i</sub>; P<sub>X</sub>(x<sub>i</sub>); log<sub>b</sub>(P<sub>X</sub>(x<sub>i</sub>))
 
-The Entropy H(X) for a given variable X with possible values x<sup>i</sup>, is the sum of multiplying the probability value P<sup>X</sup>(x<sup>i</sup>) with the log of that same probability value. In our algorithm we are using the log base 2 to do the calculation. 
+The Entropy H(X) for a given variable X with possible values x<sub>i</sub>, is the sum of multiplying the probability value P<sub>X</sub>(x<sub>i</sub>) with the log of that same probability value. In our algorithm we are using the log base 2 to do the calculation. 
 
 The fact that the formula depends on probability to the computation, Entropy measures the randomness in a given set of labels. The higher the Entropy the more random there is in the given labels. For example, if we take the whole seven records and measure Entropy for the last column (isFish label) we get: 
 
@@ -136,6 +136,12 @@ If we drop the last two *maybe* labels we get:
       >>> entropy_some = calculateEntropy(dataset[:-2])
       >>> print (entropy_some)
       0.9709505944546686
+
+If we compute Entropy for a single record (drop the other 6 records we get Entropy = 0.0:
+
+      >>> entropy_some = calculateEntropy(dataset[:-6])
+      >>> print (entropy_some)
+      0.0
 
 ## Part 2: Populating the Ranks Data - Initial Seeds 
  
