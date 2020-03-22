@@ -15,7 +15,7 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
 - Traversing Decision Tree: Case Example
 - Creating Decsion Tree: How machine learning algorithm works
 - Part 1: Calculating Entropy
-- Part 2: Calculating Entropy
+- Part 2: Choosing Best Feature To Split
 - Part 3: Creating Tree - Choosing Tree Root
 - Part 3: Looping and Splitting into Subtrees
 
@@ -123,7 +123,8 @@ There are two main loops in the function. The 1st loop just calculates the frequ
 The Entropy H(X) for a given variable X with possible values x<sub>i</sub> is the sum of multiplying the probability value P<sub>X</sub>(x<sub>i</sub>) with the log of that same probability value. In our algorithm we are using the log base 2 to do the calculation. 
 
 Given that the formula uses probability to do the computation, Entropy ends up measuring the randomness in a given set of labels; the greater the Entropy the higher is the randomness in the data. For example, if we take the whole seven records and measure Entropy for the last column (isFish label =  yes/no/maybe) we get: 
-
+      
+      # [yes,yes,no,no,no,maybe,maybe]
       $ python
       >>> from decisiontree import *
       >>> dataset, features = createDataset()
@@ -133,19 +134,20 @@ Given that the formula uses probability to do the computation, Entropy ends up m
       
 If we drop the last two *maybe* labels and their corresponding records from the dataset we get:
 
+      #
       >>> entropy_some = calculateEntropy(dataset[:-2])
       >>> print (entropy_some)
       0.9709505944546686
 
-If we compute Entropy for a single record (drop the other 6 records) we get zero Entropy:
+If we compute Entropy for a any single record (drop all other 6 records) we get zero Entropy value:
 
       >>> entropy_some = calculateEntropy(dataset[:-6])
       >>> print (entropy_some)
       0.0
 
-## Part 2: Populating the Ranks Data - Initial Seeds 
+## Part 2: Choosing Best Feature to Split 
  
-The code in this part is made of a single line
+In the above we presented how Entropy is calculated for The code in this part is made of a single line
 
     var ranks = links.mapValues(v => 1.0)    // create the ranks <key,one> RDD from the links <key, Iter> RDD
 
