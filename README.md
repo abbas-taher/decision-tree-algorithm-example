@@ -88,7 +88,7 @@ This test runs along the right most branch of the tree and terminates at the yes
     non-surfacing = 0 ; flippers = 0 
     isFish = maybe
     
-is traversed using the left most branch of the tree because both of its columns are False (0). In this case, the branch terminates at the *maybe* node.
+can be used to traverse the left most branch of the tree because both feature columns are False (0). In this case, the branch terminates at the *maybe* node. 
    
 
 ## Creating Decsion Tree: How machine learning algorithm works
