@@ -5,7 +5,7 @@ The Python code for a Decision-Tree ([*decisiontreee.py*](/decisiontree.py?raw=t
 
 In this discussion we shall take a deep dive into how the algorithm runs and try to understand its inner workings. The [output graph structure](/output.tree?raw=true "Decision Tree") is depicted in the diagram below. 
 
-<img src="/images/decision-tree.png" width="788" height="472">
+<img src="/images/decision-tree.png" width="709" height="425">
 
 
 ## Contents:
