@@ -1,7 +1,7 @@
 ## Tutorial 101: Decision Tree 
-### Understanding the Algorithm: Simple Implementation Code  
+### Understanding the Algorithm: Simple Implementation Code Example 
 
-The Python code for a Decision-Tree ([*decisiontreee.py*](/decisiontree.py?raw=true "Decision Tree")) is a good example to learn how one of the key machine learning algorithms work. The [**inputdata.py**](/inputdata.py?raw=true "Input Data") is used by the **createTree** algorithm to generate a simple decision tree that can be used for prediction purposes. The data and code presented here are partially based on an [original version](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in Chapter 3 of his book: **Machine Learning in Action**.
+The Python code for a Decision-Tree ([*decisiontreee.py*](/decisiontree.py?raw=true "Decision Tree")) is a good example to learn how one of the key machine learning algorithms work. The [*inputdata.py*](/inputdata.py?raw=true "Input Data") is used by the **createTree** algorithm to generate a simple decision tree that can be used for prediction purposes. The data and code presented here are based on an [original version](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in Chapter 3 of his book: **Machine Learning in Action**.
 
 In this discussion we shall take a deep dive into how the algorithm runs and try to understand its inner workings. The [output graph structure](/output.tree?raw=true "Decision Tree") is depicted in the diagram below. 
 
@@ -20,7 +20,7 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
 - Part 3: Looping and Splitting into Subtrees
 
 ## Running the Decision-Tree Program
-To execute the main program you can just run the decisiontree.py file using call to Python via command line:
+To execute the main function you can just run the decisiontree.py program using a call to Python via the command line:
 
       $ python decisiontree.py
       
@@ -34,7 +34,7 @@ Or you can execute it from within the Python console using the following command
       >>> decisiontree.printTree(tree)
       
 ## Input Dataset Description
-The dataset contains records for 7 species, 2 of which are fish, 3 are not and 2 maybe. The data contains two input feature columns: *non-surfacing* and *flippers* and a 3rd prediction label column: *isfish*. (Note non-surfacing means the specie can survive without coming to surface of the water) 
+The dataset contains records for 7 species, 2 of which are fish, 3 are not and 2 maybe. The data contains two input feature columns: *non-surfacing* and *flippers* and a 3rd prediction label column: *isfish*. (Note: *non-surfacing* means the specie can survive without coming to the surface of water) 
 
      dataSet = [[1, 1, 'yes'], [1, 1, 'yes'], 
                 [1, 0, 'no'],  [0, 1, 'no'],  [0, 1, 'no'], 
@@ -53,10 +53,11 @@ The dataset contains records for 7 species, 2 of which are fish, 3 are not and 2
        False(1)        False(0)       maybe
 
 ## Program Output: The Decision Tree dict
-The machine learning algorithm outputs a Python dictionary that represents a graph tree. If we run the program with the input data (file) we get the following output (which is idential to the above tree diagram) : <br>
+The machine learning algorithm (**createTree**) generates a Python dictionary that represents a graph tree. If we run the program with the input data (file) we get the following pretty print output, which is idential to the tree diagram above: <br>
 
     # output as dict
-    {'non-surfacing': {0: {'flippers': {0: 'maybe', 1: 'no'}}, 1: {'flippers': {0: 'no', 1: 'yes'}}}} 
+    {'non-surfacing': {0: {'flippers': {0: 'maybe', 1: 'no'}}, 
+                       1: {'flippers': {0: 'no', 1: 'yes'}}}} 
      
      non-surfacing: 
       | 0: 
@@ -75,7 +76,7 @@ The machine learning algorithm outputs a Python dictionary that represents a gra
 ## Traversing Decision Tree: Case example
 Here we shall explain how the decision tree relates to the input data and in the following section we shall describe how the tree is created by the machine learning algorithm. 
 
-Looking at the tree (see above diagram) we clearly see that the root node first tests whether the specie is non-surfacing. Then it tests in each case (True or False) if the specie has flippers. There are 4 possible decision cases: maybe, no, no, yes each can be reached based on the given input data. For example:
+Looking at the tree diagram we clearly see that the root node first tests whether the specie is non-surfacing. Then it tests in each case (True or False) if the specie has flippers. There are 4 possible decision cases: maybe, no, no, yes each can be reached based on the given input data. For example:
 
     A specie isFish = Yes if and only if:
       - non-surfacing = 1
@@ -84,22 +85,24 @@ Looking at the tree (see above diagram) we clearly see that the root node first 
 This test runs along the right most branch of the tree and terminates at the yes node at the bottom. Overall using a decision-tree is simple, you take any data record and start traversing the tree based on the values of the feature columns.  For example, the two features of the 7th data records: 
  
     [0, 0, 'maybe']   # 7th data records
-    non-surfacing = 0 ; flippers =0 
+    non-surfacing = 0 ; flippers = 0 
     isFish = maybe
     
-is traversed using the left most branch of the tree because both of its columns are False (0). In this case the terminating node is maybe
+is traversed using the left most branch of the tree because both of its columns are False (0). In this case, the branch terminates at the *maybe* node.
    
 
 ## Creating Decsion Tree: How machine learning algorithm works
-following manner:
- - Each input data is first spit into its feature columns and since the root node in the tree tests the non-surfacing
+The **createTree** algorithm builds a decision tree recursively. The algorithm is composed of 3 main components:
 
-- If a URL (page) is referenced the most by other URLs then its rank increases, because being referenced means that it is important which is the case of URL_1. 
-- If an important URL like URL_1 references other URLs like URL_4 this will increase the destination’s ranking
+ - Entropy test to compare information gain in data patterns
+ - Dataset spliting performed according to the entropy test
+ - dict data structure representing the tree
 
-Given the above it becomes obvious why URL_4's ranking is higher than the other two URL_2 & URL_3. If we look at the various arrows in the above diagram we can also see that URL_2 is referenced the least and that is why it gets the lowest ranking.
+At each recursive call of the createTree function, the algorithm searches for patterns in data by looking at each given feature. It peforms an entropy test to discriminate between each pattern in order to choose the best feature that can be used to split the dataset into sub-dataset. The algorithm then calls it self and passes the new sub-dataset to do the pattern search and spliting again. 
 
-The rest of the article will take a deeper look at the Python code that implements the algorithm. The code looks deceivingly simple but to understand how things actually work requires a deeper understanding of recursion, Python's list spliting, as well as Entropy formula. The code is made of 3 main parts as shown in the diagram below. The 1st part reads the data file then each URL is given a seed value in rank0. The third part of the code contains the main loop which calculates the contributions by joining the links and ranks data at each iteration and then recalculates the ranks based on that contribution. 
+The tree building terminates when there are no more features to split in the sub-dataset or when all the prediction labels are the same.
+
+The rest of the article will take a deeper look at the Python code that implements the algorithm. The code looks deceivingly simple but to understand how things actually work requires a deeper understanding of recursion, Python's list spliting, as well as understanding the **Entropy** formula. 
 
 ## Part 1: Calculating Entropy
 The code for the calculating entropy in the program is as follows:
