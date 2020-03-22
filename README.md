@@ -1,7 +1,7 @@
 ## Tutorial 101: Decision Tree 
 ### Understanding the Algorithm: Simple Implementation Code Example 
 
-The Python code for a Decision-Tree ([*decisiontreee.py*](/decisiontree.py?raw=true "Decision Tree")) is a good example to learn how one of the key machine learning algorithms work. The [*inputdata.py*](/inputdata.py?raw=true "Input Data") is used by the **createTree** algorithm to generate a simple decision tree that can be used for prediction purposes. The data and code presented here are based on an [original version](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in Chapter 3 of his book: **Machine Learning in Action**.
+The Python code for a Decision-Tree ([*decisiontreee.py*](/decisiontree.py?raw=true "Decision Tree")) is a good example to learn how one of the key machine learning algorithms work. The [*inputdata.py*](/inputdata.py?raw=true "Input Data") is used by the **createTree algorithm** to generate a simple decision tree that can be used for prediction purposes. The data and code presented here are based on an [original version](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in Chapter 3 of his book: **Machine Learning in Action**.
 
 In this discussion we shall take a deep dive into how the algorithm runs and try to understand its inner workings. The [output graph structure](/output.tree?raw=true "Decision Tree") is depicted in the diagram below. 
 
@@ -31,10 +31,10 @@ Or you can execute it from within the Python console using the following command
       >>> import inputdata
       >>> dataset, features = inputdata.createDataset()
       >>> tree = decisiontree.createTree(dataset, features)
-      >>> decisiontree.printTree(tree)
+      >>> decisiontree.pprintTree(tree)
       
 ## Input Dataset Description
-The dataset contains records for 7 species, 2 of which are fish, 3 are not and 2 maybe. The data contains two input feature columns: *non-surfacing* and *flippers* and a 3rd prediction label column: *isfish*. (Note: *non-surfacing* means the specie can survive without coming to the surface of water) 
+The *createDataset* function generates dataset records for 7 species, 2 of which are fish, 3 are not and 2 maybe. The data contains two input feature columns: *non-surfacing* and *flippers* and a 3rd prediction label column: *isfish*. (Note: *non-surfacing* means the specie can survive without coming to the surface of water) 
 
      dataSet = [[1, 1, 'yes'], [1, 1, 'yes'], 
                 [1, 0, 'no'],  [0, 1, 'no'],  [0, 1, 'no'], 
@@ -53,7 +53,7 @@ The dataset contains records for 7 species, 2 of which are fish, 3 are not and 2
        False(1)        False(0)       maybe
 
 ## Program Output: The Decision Tree dict
-The machine learning algorithm (**createTree**) generates a Python dictionary that represents a graph tree. If we run the program with the input data (file) we get the following pretty print output, which is idential to the tree diagram above: <br>
+The machine learning program generates a Python dictionary that represents a graph tree. If we run the **createTree** function with the input dataset we get the following pretty print output, which is idential to the tree diagram above: <br>
 
     # output as dict
     {'non-surfacing': {0: {'flippers': {0: 'maybe', 1: 'no'}}, 
@@ -92,20 +92,18 @@ can be used to traverse the left most branch of the tree because both feature co
    
 
 ## Creating Decsion Tree: How machine learning algorithm works
-The **createTree** algorithm builds a decision tree recursively. The algorithm is composed of 3 main components:
+The **createTree algorithm** builds a decision tree recursively. The algorithm is composed of 3 main components:
 
- - Entropy test to compare information gain in data patterns
+ - Entropy test to compare information gain in a given data pattern
  - Dataset spliting performed according to the entropy test
  - dict data structure representing the tree
 
-At each recursive call of the createTree function, the algorithm searches for patterns in data by looking at each given feature. It peforms an entropy test to discriminate between each pattern in order to choose the best feature that can be used to split the dataset into sub-dataset. The algorithm then calls it self and passes the new sub-dataset to do the pattern search and spliting again. 
-
-The tree building terminates when there are no more features to split in the sub-dataset or when all the prediction labels are the same.
+In each call of the *createTree* function, the algorithm searches for patterns in its given dataset by comparing information gain for each feature. It peforms an entropy test that discriminates between features and then chooses the one that can best split the given dataset into sub-datasets. The algorithm then calls itself recursively and passes the new sub-datasets to do the pattern search, entropy test and spliting. The tree building terminates when there are no more features to split in the sub-dataset or when all the prediction labels are the same.
 
 The rest of the article will take a deeper look at the Python code that implements the algorithm. The code looks deceivingly simple but to understand how things actually work requires a deeper understanding of recursion, Python's list spliting, as well as understanding the **Entropy** formula. 
 
 ## Part 1: Calculating Entropy
-The code for the calculating entropy in the program is as follows:
+The code for calculating Entropy is given here:
 
        def calculateEntropy(dataSet):
            counter= defaultdict(int)   # number of unique labels and their frequency
@@ -117,6 +115,10 @@ The code for the calculating entropy in the program is as follows:
                probability = counter[key]/len(dataSet)     # len(dataSet) = total number of entries 
                entropy -= probability * log(prob,2)        # log base 2
            return entropy 
+
+There are two main loops in the function. The 1st loop just calculates the frequency of each label in the given dataset and the 2nd loop calculates the entropy according to the following formula:
+
+![equation](http://www.sciweavers.org/tex2img.php?eq=1%2Bsin%28mc%5E2%29&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=)
 
 The 2nd line of the code reads the input data file and produce a Dataset of strings which are then transformed into an RDD with each line in the file being one entire string within the RDD. You can think of an RDD as a list that is special to Spark because the data within the RDD is distributed among the various nodes. Note that I have introduced a "pairs" variable into the original code to make the program more readable.
 
