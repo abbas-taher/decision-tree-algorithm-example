@@ -118,15 +118,10 @@ The code for calculating Entropy is given here:
 
 There are two main loops in the function. The 1st loop just calculates the frequency of each label in the given dataset and the 2nd loop calculates the entropy according to the following formula:
  
-H = - &sum;<sub>o</sub> x + &theta;<sub>1</sub>x
+H = - &sum;<sub>i</sub>P<sup>X</sup>(x<sub>i</sub>) log<sup>b</sup> P<sup>X</sup>(x<sub>i</sub>)
 
-Given a random variable X {\displaystyle X} X, with possible outcomes x i {\displaystyle x_{i}} x_{i}, each with probability P X ( x i ) {\displaystyle P_{X}(x_{i})} {\displaystyle P_{X}(x_{i})}, the entropy H ( X ) {\displaystyle H(X)} H(X) of X {\displaystyle X} X is as follows:
+The H(X) for a given variable X with its possible values x<sup>i</sup>, each with probability P<sup>X</sup>(x<sup>i</sup>), the entropy is as follows:
 
-    H ( X ) = − ∑ i P X ( x i ) log b ⁡ P X ( x i ) = ∑ i P X ( x i ) I X ( x i ) = E ⁡ [ I X ] H(X)=-\sum _{i}P_{X}(x_{i})\log _{b}{P_{X}(x_{i})}=\sum _{i}P_{X}(x_{i})I_{X}(x_{i})=\operatorname {E} [I_{X}] 
-    
-The 2nd line of the code reads the input data file and produce a Dataset of strings which are then transformed into an RDD with each line in the file being one entire string within the RDD. You can think of an RDD as a list that is special to Spark because the data within the RDD is distributed among the various nodes. Note that I have introduced a "pairs" variable into the original code to make the program more readable.
-
-In the 3rd line of the code, the split command generates for each line (one entire string) an array with two elements. In the 4th line each of the two elements of the array are accessed and then used to produce a key/value pair. The last line in the code applies the groupByKey command on the key/value pair RDD to produce the links RDD, which is also a key/value pair. 
 
 Note that the Array in the above is not a true array it is actually an iterator on the resultant array of urls. This is what the groupByKey command produces when applied on an RDD. This is an important and powerful construct in Spark and every programmer needs to understand it well so that they can use it correctly in their code..
 
