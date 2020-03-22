@@ -1,7 +1,7 @@
 ## Tutorial 101: Decision Tree 
 ### Understanding the Algorithm: Simple Implementation Code  
 
-The Python code for a Decision-Tree (*[decisiontreee.py]*(/decisiontree.py?raw=true "Decision Tree")) is a good example to learn how one of the key machine learning algorithms work. The [**inputdata.py**](/inputdata.py?raw=true "Input Data") is used by the **createTree** algorithm to generate a simple decision tree that can be used for prediction purposes. The data and code presented here are partially based on an [original version](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in Chapter 3 of his book: **Machine Learning in Action**.
+The Python code for a Decision-Tree ([*decisiontreee.py*](/decisiontree.py?raw=true "Decision Tree")) is a good example to learn how one of the key machine learning algorithms work. The [**inputdata.py**](/inputdata.py?raw=true "Input Data") is used by the **createTree** algorithm to generate a simple decision tree that can be used for prediction purposes. The data and code presented here are partially based on an [original version](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in Chapter 3 of his book: **Machine Learning in Action**.
 
 In this discussion we shall take a deep dive into how the algorithm runs and try to understand its inner workings. The [output graph structure](/output.tree?raw=true "Decision Tree") is depicted in the diagram below. 
 
