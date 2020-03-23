@@ -116,13 +116,13 @@ The code for calculating Entropy for the labels in a given dataset:
                entropy -= probability * log(probability,2)   # log base 2
            return entropy 
 
-There are two main loops in the function. Loop (1) just calculates the frequency of each label in the given dataset. Loop (2) calculates Entropy for those labels using the below formula:
+There are two main loops in the function. Loop (1) calculates the frequency of each label and Loop (2) calculates Entropy for those labels using the below formula:
  
 &nbsp; &nbsp; &nbsp; H(X) = - &sum;<sub>i</sub> P<sub>X</sub>(x<sub>i</sub>) * log<sub>2</sub> (P<sub>X</sub>(x<sub>i</sub>))
 
-To calculate Entropy H(X) for a given variable X with possible values x<sub>i</sub> we need to the negative sum of the product of probability P<sub>X</sub>(x<sub>i</sub>) with the log base 2 of that same probability value. 
+To compute Entropy H(X) for a given variable X with possible values x<sub>i</sub> we take the negative sum of the product of probability P<sub>X</sub>(x<sub>i</sub>) with the log base 2 of that same probability value. 
 
-Because Entropy uses probability in its formula, it is in a way a measure of disorder in the data, the greater the Entropy the higher is the randomness in the data. This means, that when a data source produces a low-probability event, that event carries more "information" than when that data source produces a high-probability one. For example, if we take the whole seven records and measure Entropy for the last column (isFish label =  yes/no/maybe) we get: 
+Because Entropy uses probability in its formula, it is in a way a measure of disorder in the data, the greater the Entropy the higher is the randomness in the data. This means, that when a data source produces a low-probability event, that event carries more "information" than when that data source produces a high-probability one. For example, if we take the whole seven records and measure Entropy for the last column we get: 
       
       # labels = [yes,yes,no,no,no,maybe,maybe]
       $ python
@@ -132,14 +132,14 @@ Because Entropy uses probability in its formula, it is in a way a measure of dis
       >>> print (entropy_all)
       1.5566567074628228
       
-If we drop the last two records and their corresponding *maybe* labels then Entropy decreases because the sample data has lost some variety and thus became less random.
+If we drop the last two records and their corresponding *maybe* labels then Entropy decreases because the sample data has lost some variety and thus became more ordered.
 
       #  labels = [yes,yes,no,no,no]
       >>> entropy_some = calculateEntropy(dataset[:-2])
       >>> print (entropy_some)
       0.9709505944546686
 
-If we compute Entropy for a any single record (drop all other 6 records) we get zero Entropy value:
+If we compute Entropy for a any single record (drop all other 6 records) we get a zero Entropy value:
 
       # labels = [yes]
       >>> entropy_some = calculateEntropy(dataset[:-6])
