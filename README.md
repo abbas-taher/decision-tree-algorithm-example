@@ -159,10 +159,9 @@ Although, the above code can help us calculate Entropy for a list of labels, we 
               featValues = {record[indx] for record in dataset}     # put feature values into a set
               featEntropy = 0.0
               for value in featValues:
-                  subDataset = splitDataset(dataset, indx, value)   # split dataset according to feature index and value
+                  subDataset = splitDataset(dataset, indx, value)      # split based on feature index and value
                   probability = len(subDataset)/float(len(dataset))
-                  featEntropy += probability * calculateEntropy(subDataset)  # add Entropy for all feature values
-
+                  featEntropy += probability * calculateEntropy(subDataset) # sum Entropy for all feature values
               infoGain = baseEntropy - featEntropy    # calculate the info gain; ie reduction in Entropy
               if (infoGain > bestInfoGain):           # compare this to the best gain so far
                   bestInfoGain = infoGain             # if better than current best, set it to best
@@ -183,19 +182,20 @@ The code listing below shows the featEntropy for each label group when given the
     => baseEntropy = 1.5566567074628228
     
     indx=0; feature=non-surfacing
-    label groups: [['yes', 'yes', 'no', 'maybe'], ['no', 'no', 'maybe']] 
+    label-groups-0: [['yes', 'yes', 'no', 'maybe'], ['no', 'no', 'maybe']] 
     => featEntropy = 1.2506982145947811
     => infoGain =  0.3059584928680417
     
-    label groups:  ['yes', 'yes', 'no', 'no', 'maybe'], ['no', 'maybe']
     indx=1; feature=flippers
+    label-groups-1:  ['yes', 'yes', 'no', 'no', 'maybe'], ['no', 'maybe']
     => featEntropy = 1.3728057820624016
     => infoGain =  0.1838509254004212
     
     So the bestFeat=0  (on-surfacing) is best feature to split the and create the root
 
-When we look at the two label groups we see that non-surfacing splits the labels more uniforly where all 'yes' values on the right and 
-It is important to note the the choosen feature is not the one that created the highest Entropy but rather the one that created the least because the information gain increases when Entropy decreases (because of the minus sign between baseEntropy and featEntropy). A
+When we look at the two label groups 0 & 1 we see that non-surfacing splits the labels more uniforly with all 'yes' values in one subgroup and two 'no' values in the other. Where flippers feature creates two subgroups one of which contains most values and the other only two values. As a result non-surfacing was choosed as the root node in the tree.
+
+It is important to note the the choosen feature is not the one that created the highest Entropy but rather the one that created the least because the information gain (purity) increases when Entropy decreases (because of the minus sign between baseEntropy and featEntropy).
 
 ## Part 3: Looping and Calculating Contributions & Recalculating Ranks
  
