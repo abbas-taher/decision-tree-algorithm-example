@@ -122,7 +122,7 @@ There are two main loops in the function. Loop (1) calculates the frequency of e
 
 To compute Entropy H(X) for a given variable X with possible values x<sub>i</sub> we take the negative sum of the product of probability P<sub>X</sub>(x<sub>i</sub>) with the log base 2 of that same probability value. 
 
-Because Entropy uses probability in its formula, it is in a way a measure of disorder in the data, the greater the Entropy the higher is the randomness in the data. This means, that when a data source produces a low-probability event, that event carries more "information" than when that data source produces a high-probability one. For example, if we take the all seven records and measure baseEntropy for all labels we get: 
+Because Entropy uses probability in its formula, it is in a way a measure disorder in the data, the greater the Entropy the higher is the randomness in the data. This means, that when a data source produces a low-probability event, that event carries more "information" than when that data source produces a high-probability one. For example, if we take the all seven records and measure baseEntropy for all labels we get: 
       
       # labels = [yes,yes,no,no,no,maybe,maybe]
       $ python
@@ -170,7 +170,10 @@ Although, the above code can help us calculate Entropy for a list of labels, we 
           return bestFeature                          # return an best feature index
 
 
-The code above is used to find the feature that can produce the highest information gain (across all its feature values) for the given set of labels. Initially the function calcualte the baseEntropy for all labels of dataset (which will be used to compare information gain). Then for each feature it calculates the featEntropy (feature Entropy) by dividing the dataset into various subgroup.           
+The code above is used to find the feature that can produce the highest information gain (across all its feature values) for the given set of labels. This means, that the choosen feature can split the data uniformally and produce the purest isfish nodes.
+Initially the function calcualte the baseEntropy for all labels of the dataset (which will be used to compare information gain). Then for each feature it calculates the featEntropy (feature Entropy) by dividing the dataset into various subgroup, then calculating the sum of all Entropies for all feature values. 
+
+The code listing below shows the featEntropy for each label group when given the full 7 data records. The calculation and spliting show is the same one done to select the root of the decision tree, in this case *non-surfacing*. 
 
     Dataset: [[1, 1, 'yes'], [1, 1, 'yes'], 
               [1, 0, 'no'], [0, 1, 'no'], [0, 1, 'no'], 
@@ -181,15 +184,17 @@ The code above is used to find the feature that can produce the highest informat
     
     indx=0; feature=non-surfacing
     label groups: [['yes', 'yes', 'no', 'maybe'], ['no', 'no', 'maybe']] 
-    =>  featEntropy=1.2506982145947811
+    => featEntropy = 1.2506982145947811
+    => infoGain =  0.3059584928680417
     
     label groups:  ['yes', 'yes', 'no', 'no', 'maybe'], ['no', 'maybe']
     indx=1; feature=flippers
-    => featEntropy=1.3728057820624016
+    => featEntropy = 1.3728057820624016
+    => infoGain =  0.1838509254004212
     
-    So the bestFeat=0  (on-surfacing to split)
+    So the bestFeat=0  (on-surfacing) is best feature to split the and create the root
 
-When we look at the two label groups we see that non-surfacing splits the labels more unifo
+When we look at the two label groups we see that non-surfacing splits the labels more uniforly where all 'yes' values on the right and 
 It is important to note the the choosen feature is not the one that created the highest Entropy but rather the one that created the least because the information gain increases when Entropy decreases (because of the minus sign between baseEntropy and featEntropy). A
 
 ## Part 3: Looping and Calculating Contributions & Recalculating Ranks
