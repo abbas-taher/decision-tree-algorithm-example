@@ -148,9 +148,29 @@ If we compute Entropy for a any single record (drop all other 6 records) we get 
 
 ## Part 2: Choosing Best Feature to Split 
  
-In the above we presented how Entropy is calculated for The code in this part is made of a single line
+Although, the above code can help us calculate Entropy for a list of labels, we need to do more to discriminate between various features and test for Entropy when building the tree dict. 
 
-    var ranks = links.mapValues(v => 1.0)    // create the ranks <key,one> RDD from the links <key, Iter> RDD
+      def chooseBestFeatureToSplit(dataset):
+          baseEntropy = calculateEntropy(dataset)
+          bestInfoGain = 0.0; bestFeature = -1
+
+          numFeat = len(dataset[0]) - 1          # do not include last label column     
+          for indx in range(numFeat):            # iterate over all the features index
+              featValues = {record[indx] for record in dataset}     # put feature values into a set
+              featEntropy = 0.0
+              for value in featValues:
+                  subDataset = splitDataset(dataset, indx, value)   # split dataset according to feature index and value
+                  probability = len(subDataset)/float(len(dataset))
+                  featEntropy += probability * calculateEntropy(subDataset)  # add Entropy for all feature values
+
+              infoGain = baseEntropy - featEntropy    # calculate the info gain; ie reduction in Entropy
+              if (infoGain > bestInfoGain):           # compare this to the best gain so far
+                  bestInfoGain = infoGain             # if better than current best, set it to best
+                  bestFeature = indx
+          return bestFeature                          # return an best feature index
+
+
+The code above is used to find the feature that can produce the highest information gain (across all feature values) for the given set of labels. Initiallt the function calcualte the baseEntropy for the dataset as a whole (which will be used to compare information gain) in the end. Then for each feature it calculated the featureEntropy (featEntropy) by dividing the dataset into various subgroup according based on the           
 
 The above code creates "ranks0" - a key/value pair RDD by taking the key (URL) from the links RDD and assigning the value = 1.0 to it.  Ranks0 is the initial ranks RDD and it is populated with the seed number 1.0 (please see diagram below). In the 3rd part of the program we shall see how this ranks RDD is recalculated at each iteration and eventually converges, after 20 iterations, into the PageRank probability scores mentioned previously.  
 
