@@ -3,7 +3,7 @@
 
 The Python code for a Decision-Tree ([*decisiontreee.py*](/decisiontree.py?raw=true "Decision Tree")) is a good example to learn how a basic machine learning algorithm works. The [*inputdata.py*](/inputdata.py?raw=true "Input Data") is used by the **createTree algorithm** to generate a simple decision tree that can be used for prediction purposes. The data and code presented here are a modified version of the [original code](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in Chapter 3 of his book: **Machine Learning in Action**.
 
-In this discussion we shall take a deep dive into how the algorithm runs and try to understand how the [dict tree structure](/output.tree?raw=true "Decision Tree") that resembles the below graph is generated. 
+In this discussion we shall take a deep dive into how the algorithm runs and try to understand how the [dict tree structure](/output.tree?raw=true "Decision Tree") that is depicted in the graph below is generated. 
 
 <img src="/images/decision-tree.png" width="709" height="425">
 
@@ -24,7 +24,7 @@ To execute the main function you can just run the decisiontree.py program using 
 
       $ python decisiontree.py
       
-Or you can execute it from within the Python console using the following commands: 
+Or you can execute it from within the Python shell using the following commands: 
 
       $ python 
       >>> import decisiontree
@@ -34,7 +34,7 @@ Or you can execute it from within the Python console using the following command
       >>> decisiontree.pprintTree(tree)
       
 ## Input Dataset Description
-The *createDataset* function generates dataset records for 7 species, 2 of which are fish, 3 are not and 2 maybe. The data contains two input feature columns: *non-surfacing* and *flippers* and a 3rd prediction label column: *isfish*. (Note: *non-surfacing* means the specie can survive without coming to the surface of water) 
+The *createDataset* function generates sample records for 7 species: 2 fish, 3 not fish and 2 maybe. The data contains two input feature columns: *non-surfacing* and *flippers* and a 3rd prediction label column: *isfish*. (Note: *non-surfacing* means the specie can survive without coming to the surface of the water) 
 
      dataSet = [[1, 1, 'yes'], [1, 1, 'yes'], 
                 [1, 0, 'no'],  [0, 1, 'no'],  [0, 1, 'no'], 
@@ -53,7 +53,7 @@ The *createDataset* function generates dataset records for 7 species, 2 of which
        False(1)        False(0)       maybe
 
 ## Program Output: The Decision Tree dict
-The machine learning program generates a Python dictionary that represents a graph tree. If we run the **createTree** function with the input dataset we get the following pretty print output, which is idential to the tree diagram above: <br>
+The machine learning program builds a Python dictionary that represents the graph of a tree. If we run the **createTree** function with the input dataset we get the following pretty print output, which is idential to the tree diagram above: <br>
 
     # output as dict
     {'non-surfacing': {0: {'flippers': {0: 'maybe', 1: 'no'}}, 
@@ -74,7 +74,7 @@ The machine learning program generates a Python dictionary that represents a gra
       |    
 
 ## Traversing Decision Tree: Case example
-Here we shall explain how the decision tree relates to the input data and in the following section we shall describe how the tree is created by the machine learning algorithm. 
+We stat first by explaining how the decision tree relates to the input data and in the following sections we shall describe how the tree is created by the machine learning algorithm. 
 
 Looking at the tree diagram we clearly see that the root node first tests whether the specie is non-surfacing. Then it tests in each case (True or False) if the specie has flippers. There are 4 possible decision cases: maybe, no, no, yes each can be reached based on the given input data. For example:
 
@@ -88,7 +88,7 @@ This test runs along the right most branch of the tree and terminates at the yes
     non-surfacing = 0 ; flippers = 0 
     isFish = maybe
     
-can be used to traverse the left most branch of the tree because both feature columns are False (0). In this case, the branch terminates at the *maybe* node. 
+can be used to traverse the left most branch of the tree because both feature columns are False (0). In this case, the branch ends at the *maybe* leave node. 
    
 
 ## Creating Decsion Tree: How machine learning algorithm works
@@ -96,11 +96,11 @@ The **createTree algorithm** builds a decision tree recursively. The algorithm i
 
  - Entropy test to compare information gain in a given data pattern
  - Dataset spliting performed according to the entropy test
- - dict data structure representing the tree
+ - Growing dict data structure that represents the decision tree
 
-In each call of the *createTree* function, the algorithm searches for patterns in its given dataset by comparing information gain for each feature. It peforms an entropy test that discriminates between features and then chooses the one that can best split the given dataset into sub-datasets. The algorithm then calls itself recursively and passes the new sub-datasets to do the pattern search, entropy test and spliting. The tree building terminates when there are no more features to split in the sub-dataset or when all the prediction labels are the same.
+In each recursive iteration in *createTree* function, the algorithm searches for patterns in its given dataset by comparing information gain for each feature. It peforms an entropy test that discriminates between features and then chooses the one that can best split the given dataset into sub-datasets. The algorithm then calls itself recursively to do the pattern search, entropy test and spliting on the new sub-datasets. Recursion terminates and the tree branch is rolled when there are no more features to split in the sub-dataset or when all the prediction labels are the same.
 
-The rest of the article will take a deeper look at the Python code that implements the algorithm. The code looks deceivingly simple but to understand how things actually work requires a deeper understanding of recursion, Python's list spliting, as well as understanding the **Entropy** formula. 
+The rest of the article will take a deeper look at the Python code that implements the algorithm. The code looks deceivingly simple but to understand how things actually work requires a deeper understanding of recursion, Python's list spliting, as well as understanding how Entropy works. 
 
 ## Part 1: Calculating Entropy
 The code for calculating Entropy for the labels in a given dataset:
