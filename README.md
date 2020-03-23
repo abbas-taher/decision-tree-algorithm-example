@@ -122,28 +122,28 @@ There are two main loops in the function. Loop (1) calculates the frequency of e
 
 To compute Entropy H(X) for a given variable X with possible values x<sub>i</sub> we take the negative sum of the product of probability P<sub>X</sub>(x<sub>i</sub>) with the log base 2 of that same probability value. 
 
-Because Entropy uses probability in its formula, it is in a way a measure of disorder in the data, the greater the Entropy the higher is the randomness in the data. This means, that when a data source produces a low-probability event, that event carries more "information" than when that data source produces a high-probability one. For example, if we take the whole seven records and measure Entropy for the last column we get: 
+Because Entropy uses probability in its formula, it is in a way a measure of disorder in the data, the greater the Entropy the higher is the randomness in the data. This means, that when a data source produces a low-probability event, that event carries more "information" than when that data source produces a high-probability one. For example, if we take the all seven records and measure baseEntropy for all labels we get: 
       
       # labels = [yes,yes,no,no,no,maybe,maybe]
       $ python
       >>> from decisiontree import *
       >>> dataset, features = createDataset()
-      >>> entropy_all = calculateEntropy(dataset)
-      >>> print (entropy_all)
+      >>> baseEntropy = calculateEntropy(dataset)
+      >>> print (baseEntropy)
       1.5566567074628228
       
 If we drop the last two records and their corresponding *maybe* labels then Entropy decreases because the sample data has lost some variety and thus became more ordered.
 
       #  labels = [yes,yes,no,no,no]
-      >>> entropy_some = calculateEntropy(dataset[:-2])
-      >>> print (entropy_some)
+      >>> entropy = calculateEntropy(dataset[:-2])
+      >>> print (entropy)
       0.9709505944546686
 
 If we compute Entropy for a any single record (drop all other 6 records) we get a zero Entropy value:
 
       # labels = [yes]
-      >>> entropy_some = calculateEntropy(dataset[:-6])
-      >>> print (entropy_some)
+      >>> entropy = calculateEntropy(dataset[:-6])
+      >>> print (entropy)
       0.0
 
 ## Part 2: Choosing Best Feature to Split 
@@ -170,9 +170,27 @@ Although, the above code can help us calculate Entropy for a list of labels, we 
           return bestFeature                          # return an best feature index
 
 
-The code above is used to find the feature that can produce the highest information gain (across all feature values) for the given set of labels. Initiallt the function calcualte the baseEntropy for the dataset as a whole (which will be used to compare information gain) in the end. Then for each feature it calculated the featureEntropy (featEntropy) by dividing the dataset into various subgroup according based on the           
+The code above is used to find the feature that can produce the highest information gain (across all its feature values) for the given set of labels. Initially the function calcualte the baseEntropy for all labels of dataset (which will be used to compare information gain). Then for each feature it calculates the featEntropy (feature Entropy) by dividing the dataset into various subgroup.           
 
-The above code creates "ranks0" - a key/value pair RDD by taking the key (URL) from the links RDD and assigning the value = 1.0 to it.  Ranks0 is the initial ranks RDD and it is populated with the seed number 1.0 (please see diagram below). In the 3rd part of the program we shall see how this ranks RDD is recalculated at each iteration and eventually converges, after 20 iterations, into the PageRank probability scores mentioned previously.  
+    Dataset: [[1, 1, 'yes'], [1, 1, 'yes'], 
+              [1, 0, 'no'], [0, 1, 'no'], [0, 1, 'no'], 
+              [1, 1, 'maybe'], [0, 0, 'maybe']]
+
+    labels: ['yes', 'yes', 'no', 'no', 'no', 'maybe', 'maybe']
+    => baseEntropy = 1.5566567074628228
+    
+    indx=0; feature=non-surfacing
+    label groups: [['yes', 'yes', 'no', 'maybe'], ['no', 'no', 'maybe']] 
+    =>  featEntropy=1.2506982145947811
+    
+    label groups:  ['yes', 'yes', 'no', 'no', 'maybe'], ['no', 'maybe']
+    indx=1; feature=flippers
+    => featEntropy=1.3728057820624016
+    
+    So the bestFeat=0  (on-surfacing to split)
+
+When we look at the two label groups we see that non-surfacing splits the labels more unifo
+It is important to note the the choosen feature is not the one that created the highest Entropy but rather the one that created the least because the information gain increases when Entropy decreases (because of the minus sign between baseEntropy and featEntropy). A
 
 ## Part 3: Looping and Calculating Contributions & Recalculating Ranks
  
