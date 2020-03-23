@@ -105,26 +105,26 @@ The rest of the article will take a deeper look at the Python code that implemen
 ## Part 1: Calculating Entropy
 The code for calculating Entropy for the labels in a given dataset:
 
-       def calculateEntropy(dataSet):
+       def calculateEntropy(dataset):
            counter= defaultdict(int)   # number of unique labels and their frequency
-     (1)   for record in dataSet:      
+     (1)   for record in dataset:      
                label = record[-1]      # always assuming last column is the label column 
                counter[label] += 1
            entropy = 0.0
      (2)   for key in counter:
-               probability = counter[key]/len(dataSet)       # len(dataSet) = total number of entries 
+               probability = counter[key]/len(dataset)       # len(dataSet) = total number of entries 
                entropy -= probability * log(probability,2)   # log base 2
            return entropy 
 
-There are two main loops in the function. The 1st loop just calculates the frequency of each label in the given dataset and the 2nd loop calculates Entropy for those labels using this formula:
+There are two main loops in the function. Loop (1) just calculates the frequency of each label in the given dataset. Loop (2) calculates Entropy for those labels using the below formula:
  
-&nbsp; &nbsp; &nbsp; H(X) = - &sum;<sub>i</sub> P<sub>X</sub>(x<sub>i</sub>) * log<sub>b</sub> (P<sub>X</sub>(x<sub>i</sub>))
+&nbsp; &nbsp; &nbsp; H(X) = - &sum;<sub>i</sub> P<sub>X</sub>(x<sub>i</sub>) * log<sub>2</sub> (P<sub>X</sub>(x<sub>i</sub>))
 
-The Entropy H(X) for a given variable X with possible values x<sub>i</sub> is the sum of multiplying the probability value P<sub>X</sub>(x<sub>i</sub>) with the log of that same probability value. In our algorithm we are using the log base 2 to do the calculation. 
+To calculate Entropy H(X) for a given variable X with possible values x<sub>i</sub> we need to the negative sum of the product of probability P<sub>X</sub>(x<sub>i</sub>) with the log base 2 of that same probability value. 
 
-Given that the formula uses probability to do the computation, Entropy ends up measuring the randomness in a given set of labels; the greater the Entropy the higher is the randomness in the data. For example, if we take the whole seven records and measure Entropy for the last column (isFish label =  yes/no/maybe) we get: 
+Because Entropy uses probability in its formula, it is in a way a measure of disorder in the data, the greater the Entropy the higher is the randomness in the data. This means, that when a data source produces a low-probability event, that event carries more "information" than when that data source produces a high-probability one. For example, if we take the whole seven records and measure Entropy for the last column (isFish label =  yes/no/maybe) we get: 
       
-      # [yes,yes,no,no,no,maybe,maybe]
+      # labels = [yes,yes,no,no,no,maybe,maybe]
       $ python
       >>> from decisiontree import *
       >>> dataset, features = createDataset()
@@ -132,15 +132,16 @@ Given that the formula uses probability to do the computation, Entropy ends up m
       >>> print (entropy_all)
       1.5566567074628228
       
-If we drop the last two *maybe* labels and their corresponding records from the dataset we get:
+If we drop the last two records and their corresponding *maybe* labels then Entropy decreases because the sample data has lost some variety and thus became less random.
 
-      #
+      #  labels = [yes,yes,no,no,no]
       >>> entropy_some = calculateEntropy(dataset[:-2])
       >>> print (entropy_some)
       0.9709505944546686
 
 If we compute Entropy for a any single record (drop all other 6 records) we get zero Entropy value:
 
+      # labels = [yes]
       >>> entropy_some = calculateEntropy(dataset[:-6])
       >>> print (entropy_some)
       0.0
