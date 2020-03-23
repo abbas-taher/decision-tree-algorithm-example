@@ -107,8 +107,8 @@ The code for calculating Entropy for the labels in a given dataset:
 
        def calculateEntropy(dataSet):
            counter= defaultdict(int)   # number of unique labels and their frequency
-     (1)   for vector in dataSet:      
-               label = vector[-1]      # always assuming last column is the label column 
+     (1)   for record in dataSet:      
+               label = record[-1]      # always assuming last column is the label column 
                counter[label] += 1
            entropy = 0.0
      (2)   for key in counter:
@@ -116,7 +116,7 @@ The code for calculating Entropy for the labels in a given dataset:
                entropy -= probability * log(probability,2)   # log base 2
            return entropy 
 
-There are two main loops in the function. The 1st loop just calculates the frequency of each label in the given dataset and the 2nd loop calculates the entropy of those labels according to the following formula:
+There are two main loops in the function. The 1st loop just calculates the frequency of each label in the given dataset and the 2nd loop calculates Entropy for those labels using this formula:
  
 &nbsp; &nbsp; &nbsp; H(X) = - &sum;<sub>i</sub> P<sub>X</sub>(x<sub>i</sub>) * log<sub>b</sub> (P<sub>X</sub>(x<sub>i</sub>))
 
