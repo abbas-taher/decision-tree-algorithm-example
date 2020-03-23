@@ -8,5 +8,6 @@ def createDataset():
                [1, 0, 'maybe']]
     
     features = ['non-surfacing','flippers']
+    label = ['isfish']
     
     return dataSet, features
