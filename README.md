@@ -163,9 +163,9 @@ Although, the above code can help us calculate Entropy for a list of labels, we 
               featValues = {record[indx] for record in dataset}     # put feature values into a set
               featEntropy = 0.0
               for value in featValues:
-                  subDataset = splitDataset(dataset, indx, value)      # split based on feature index and value
+                  subDataset = splitDataset(dataset, indx, value)      # split on feature index and value
                   probability = len(subDataset)/float(len(dataset))
-                  featEntropy += probability * calculateEntropy(subDataset) # sum Entropy for all feature values
+                  featEntropy += probability * calculateEntropy(subDataset) # sum Entropy for all feature vals
               infoGain = baseEntropy - featEntropy    # calculate the info gain; ie reduction in Entropy
               if (infoGain > bestInfoGain):           # compare this to the best gain so far
                   bestInfoGain = infoGain             # if better than current best, set it to best
