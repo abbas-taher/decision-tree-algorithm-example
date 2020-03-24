@@ -167,19 +167,19 @@ Although, the above code can help us calculate Entropy for a list of labels, we 
                   probability = len(subDataset)/float(len(dataset))
                   featEntropy += probability * calculateEntropy(subDataset) # sum Entropy for all feature vals
               infoGain = baseEntropy - featEntropy    # calculate the info gain; ie reduction in Entropy
-              if (infoGain > bestInfoGain):           # compare this to the best gain so far
+              if infoGain > bestInfoGain:             # compare this to the best gain so far
                   bestInfoGain = infoGain             # if better than current best, set it to best
                   bestFeature = indx
           return bestFeature                          # return an best feature index
 
 
-The code above is used to find the feature that can produce the highest information gain (across all its feature values) for the given set of labels. This means, that the choosen feature can split the data uniformally and produce the "purest" set of terminating nodes.
+The code above is used to find the feature that can produce the highest information gain (across all its feature values) for the given set of labels. This means, that the choosen feature can split the data uniformly and produce the "purest" set of terminating nodes.
 
-Initially the function calcualte the baseEntropy for all labels of the dataset (which will be used to compare information gain). Then for each feature it calculates the featEntropy (feature Entropy) by dividing the dataset into various subgroup, then calculating the sum of all these Entropies for all feature values. In information theory featEntropy represents the information content of a message and in our case is calculated as follows:
+Initially the function calculates the baseEntropy for all labels of the dataset (which will be used to compare information gain). Then for each feature it calculates the featEntropy (feature Entropy) by dividing the dataset into various subgroup. It then calculates the sum of all subgroup Entropies for all feature values. In information theory featEntropy is often referred to as the "information content of a message". In our case it is calculated using the following:
 
 &nbsp; &nbsp; &nbsp; featEntrop = - Px<sub>0</sub> * log<sub>2</sub> (Px<sub>0</sub>) - Px<sub>1</sub> * log<sub>2</sub> (Px<sub>1</sub>)
 
-The code listing below shows the featEntropy for each label group when given the full 7 data records. The calculation and spliting show is the same one done to select the root of the decision tree, in this case *non-surfacing*. 
+The code listing below shows the featEntropy for each label group when given the full 7 data records. The calculation and spliting shown below traces how the root node *non-surfacing* of the decision tree was choosen. 
 
     Dataset: [[1, 1, 'yes'], [1, 1, 'yes'], 
               [1, 0, 'no'], [0, 1, 'no'], [0, 1, 'no'], 
@@ -191,16 +191,17 @@ The code listing below shows the featEntropy for each label group when given the
     indx=0; feature=non-surfacing
     label-split-indx0: [['no', 'no', 'maybe'],['yes', 'yes', 'no', 'maybe']] 
     => featEntropy = 1.2506982145947811
-    => infoGain =  0.3059584928680417
+    => infoGain0 =  0.3059584928680417
     
     indx=1; feature=flippers
     label-split-indx1:  [['no', 'maybe'],['yes', 'yes', 'no', 'no', 'maybe']] 
     => featEntropy = 1.3728057820624016
-    => infoGain =  0.1838509254004212
+    => infoGain1 =  0.1838509254004212
     
-    So the bestFeat=0  (on-surfacing) is best feature to split the and create the root
+    infoGain0 > infoGain1
+    =>  bestFeat=0  (on-surfacing) is the best feature to split and create the root node
 
-When we look at the two label-split-indx0 & label-split-indx1 we see that non-surfacing splits the labels more uniforly with all 'yes' values in one subgroup and two 'no' values in the other. Whereas the flippers feature creates two subgroups one of which contains most values and the other only two values no & maybe. As a result non-surfacing was choosed as the root node in the tree.
+When we look at the two label-split-indx0 & label-split-indx1 we see that *non-surfacing* splits the labels more uniformly with all *yes* values in one subgroup and two *no* values in the other. Whereas the flippers feature creates two subgroups, the first one contains a *no* and a *maybe* label and the second subgroup contains the other 5 labels. As a result, *non-surfacing* was choosed as the root node in the tree.
 
 It is important to note the the choosen feature is not the one that created the highest Entropy but rather the one that created the least because information gain (purity) increases when Entropy decreases (because of the minus sign between baseEntropy and featEntropy).
 
