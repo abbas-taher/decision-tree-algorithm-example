@@ -3,12 +3,13 @@
 
 The Python code for a Decision-Tree ([*decisiontreee.py*](/decisiontree.py?raw=true "Decision Tree")) is a good example to learn how a basic machine learning algorithm works. The [*inputdata.py*](/inputdata.py?raw=true "Input Data") is used by the **createTree algorithm** to generate a simple decision tree that can be used for prediction purposes. The data and code presented here are a modified version of the [original code](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in Chapter 3 of his book: **Machine Learning in Action**.
 
-In this discussion we shall take a deep dive into how the algorithm runs and try to understand how the [dict tree structure](/output.tree?raw=true "Decision Tree") that is depicted in the graph below is generated. 
+In this discussion we shall take a deep dive into how the algorithm runs and try to understand how the [Python dict tree](/output.tree?raw=true "Decision Tree") structure depicted in the graph below is generated. 
 
 <img src="/images/decision-tree.png" width="709" height="425">
 
 
 ## Contents:
+- Historical Note
 - Running the Decision-Tree Program
 - Input Dataset Description
 - Program Output: The Decision Tree dict
@@ -18,6 +19,9 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
 - Part 2: Choosing Best Feature To Split
 - Part 3: Creating Tree - Choosing Tree Root
 - Part 3: Looping and Splitting into Subtrees
+
+## Historical Note
+Decision trees were first invented by 
 
 ## Running the Decision-Tree Program
 To execute the main function you can just run the decisiontree.py program using a call to Python via the command line:
@@ -169,8 +173,11 @@ Although, the above code can help us calculate Entropy for a list of labels, we 
           return bestFeature                          # return an best feature index
 
 
-The code above is used to find the feature that can produce the highest information gain (across all its feature values) for the given set of labels. This means, that the choosen feature can split the data uniformally and produce the purest isfish nodes.
-Initially the function calcualte the baseEntropy for all labels of the dataset (which will be used to compare information gain). Then for each feature it calculates the featEntropy (feature Entropy) by dividing the dataset into various subgroup, then calculating the sum of all Entropies for all feature values. 
+The code above is used to find the feature that can produce the highest information gain (across all its feature values) for the given set of labels. This means, that the choosen feature can split the data uniformally and produce the "purest" set of terminating nodes.
+
+Initially the function calcualte the baseEntropy for all labels of the dataset (which will be used to compare information gain). Then for each feature it calculates the featEntropy (feature Entropy) by dividing the dataset into various subgroup, then calculating the sum of all these Entropies for all feature values. In information theory featEntropy represents the information content of a message and in our case is calculated as follows:
+
+&nbsp; &nbsp; &nbsp; featEntrop(F) = - P(x<sub>0</sub>) * log<sub>2</sub> (P(x<sub>0</sub>)) - P(x<sub>1</sub>) * log<sub>2</sub> (P(x<sub>1</sub>))
 
 The code listing below shows the featEntropy for each label group when given the full 7 data records. The calculation and spliting show is the same one done to select the root of the decision tree, in this case *non-surfacing*. 
 
