@@ -16,7 +16,7 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
 - Traversing Decision Tree: Case Example
 - Creating Decsion Tree: How machine learning algorithm works
 - Part 1: Calculating Entropy
-- Part 2: Choosing Best Feature To Split
+- Part 2: Choosing Best Feature To Branch Tree
 - Part 3: Creating Tree - Choosing Tree Root
 - Part 3: Looping and Splitting into Subtrees
 
@@ -150,9 +150,9 @@ If we compute Entropy for a any single record (drop all other 6 records) we get 
       >>> print (entropy)
       0.0
 
-## Part 2: Choosing Best Feature to Split 
+## Part 2: Choosing Best Feature to Branch Tree
  
-Although, the above code can help us calculate Entropy for a list of labels, we need to do more to discriminate between various features and test for Entropy when building the tree dict. 
+Although, the above code can help us calculate Entropy for a list of labels, we need to do more to discriminate between various features and test for Entropy when building the tree top down. 
 
       def chooseBestFeatureToSplit(dataset):
           baseEntropy = calculateEntropy(dataset)
@@ -175,11 +175,12 @@ Although, the above code can help us calculate Entropy for a list of labels, we 
 
 The code above is used to find the feature that can produce the highest information gain (across all its feature values) for the given set of labels. This means, that the choosen feature can split the data uniformly and produce the "purest" set of terminating nodes.
 
-Initially the function calculates the baseEntropy for all labels of the dataset (which will be used to compare information gain). Then for each feature it calculates the featEntropy (feature Entropy) by dividing the dataset into various subgroup. It then calculates the sum of all subgroup Entropies for all feature values. In information theory featEntropy is often referred to as the "information content of a message". In our case it is calculated using the following:
+Initially the function calculates the baseEntropy for all labels of the dataset (which will be used to compare information gain). Then for each feature it calculates the featEntropy (feature Entropy) by dividing the dataset into various subgroup. It then calculates the sum of all subgroup Entropies for all feature values. In information theory, featEntropy is often referred to as the "information content of a message". In our case it is calculated using the following:
 
 &nbsp; &nbsp; &nbsp; featEntrop = - Px<sub>0</sub> * log<sub>2</sub> (Px<sub>0</sub>) - Px<sub>1</sub> * log<sub>2</sub> (Px<sub>1</sub>)
 
-The code listing below shows the featEntropy for each label group when given the full 7 data records. The calculation and spliting shown below traces how the root node *non-surfacing* of the decision tree was choosen. 
+### Choosing Root Node
+The code listing below shows the featEntropy for each label group when given the full 7 data records. The calculation and spliting show how the node *non-surfacing* is choosen as the top root node of the tree. 
 
     Dataset: [[1, 1, 'yes'], [1, 1, 'yes'], 
               [1, 0, 'no'], [0, 1, 'no'], [0, 1, 'no'], 
@@ -189,19 +190,21 @@ The code listing below shows the featEntropy for each label group when given the
     => baseEntropy = 1.5566567074628228
     
     indx=0; feature=non-surfacing
-    label-split-indx0: [['no', 'no', 'maybe'],['yes', 'yes', 'no', 'maybe']] 
+    subDatasets: [[0,1,'no'],[0,1,'no'],[0,0,'maybe']]   [[1,1,'yes'],[1,1,'yes'],[1,0,'no'],[1,1,'maybe']]
+    labels: [['no', 'no', 'maybe'],['yes', 'yes', 'no', 'maybe']] 
     => featEntropy = 1.2506982145947811
     => infoGain0 =  0.3059584928680417
     
     indx=1; feature=flippers
-    label-split-indx1:  [['no', 'maybe'],['yes', 'yes', 'no', 'no', 'maybe']] 
+    subDatasets: [[0,0,'maybe'],[1,0,'no']]   [[0,1,'no'],[0,1,'no'],[1,1,'yes'],[1,1,'yes'],[1,1,'maybe']]
+    labels:  [['no', 'maybe'],['yes', 'yes', 'no', 'no', 'maybe']] 
     => featEntropy = 1.3728057820624016
     => infoGain1 =  0.1838509254004212
     
     infoGain0 > infoGain1
     =>  bestFeat=0  (on-surfacing) is the best feature to split and create the root node
 
-When we look at the two label-split-indx0 & label-split-indx1 we see that *non-surfacing* splits the labels more uniformly with all *yes* values in one subgroup and two *no* values in the other. Whereas the flippers feature creates two subgroups, the first one contains a *no* and a *maybe* label and the second subgroup contains the other 5 labels. As a result, *non-surfacing* was choosed as the root node in the tree.
+When we look at the two subDataset groups for indx=0 we see that *non-surfacing* splits the labels more uniformly with all *yes* values in one subgroup and two *no* values in the other. Whereas the flippers feature creates two subDatasets that are less pure, ie. the first one contains a *no* and a *maybe* label and the second subDataset contains the other 5 labels. As a result, *non-surfacing* was choosed as the root node in the tree.
 
 It is important to note the the choosen feature is not the one that created the highest Entropy but rather the one that created the least because information gain (purity) increases when Entropy decreases (because of the minus sign between baseEntropy and featEntropy).
 
