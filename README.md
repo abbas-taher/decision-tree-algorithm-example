@@ -204,44 +204,41 @@ The code listing below shows the featEntropy for each label group when given the
     infoGain0 > infoGain1
     =>  bestFeat=0  (on-surfacing) is the best feature to split and create the root node
 
-When we look at the two subDataset groups for indx=0 we see that *non-surfacing* splits the labels more uniformly with all *yes* values in one subgroup and two *no* values in the other. Whereas the flippers feature creates two subDatasets that are less pure, ie. the first one contains a *no* and a *maybe* label and the second subDataset contains the other 5 labels. As a result, *non-surfacing* was choosed as the root node in the tree.
+When we look at the two subDataset groups for indx=0 we see that *non-surfacing* splits the labels more uniformly with all *yes* values in one subgroup and two *no* values in the other. Whereas the flippers feature creates two subDatasets that are less pure, ie. the first one contains a *no* and a *maybe* label and the second subDataset contains the other 5 labels. As a result, *non-surfacing* was choosen as the root node in the tree.
 
-It is important to note the the choosen feature is not the one that created the highest Entropy but rather the one that created the least because information gain (purity) increases when Entropy decreases (because of the minus sign between baseEntropy and featEntropy).
+It is important to note the the choosen feature is not the one that creates the highest Entropy but rather the one that creates the least because information gain (purity) increases when Entropy decreases (because of the minus sign between baseEntropy and featEntropy).
 
-## Part 3: Looping and Calculating Contributions & Recalculating Ranks
+## Part 3: Looping and Building Tree
  
-This part is the heart of the PageRank algorithm. In each iteration, the contributions are calculated and the ranks are recalculated based on those contributions. The algorithm has 4 steps:
-<br> &nbsp; 1- Start the algorithm with each page at rank 1
-<br> &nbsp; 2- Calculate URL contribution: contrib = rank/size
-<br> &nbsp; 3- Set each URL new rank = 0.15 + 0.85 x contrib
-<br> &nbsp; 4- Iterate to step 2 with the new rank 
+This part is the heart of the Decision Tree algorithm. In each recursive iteration, a new node is choosen to branch the tree and then a new set of sub-datasets are passed to the next iteration. The algorithm has 4 steps:
+  1- Start the algorithm with the full dataset and features
+  2- Calculate URL contribution: contrib = rank/size
+  3- Set each URL new rank = 0.15 + 0.85 x contrib
+  4- Iterate to step 2 with the new rank
 
 Here is the Spark code for the 4 steps above:
 
-    for (i <- 1 to iters) {
-    (1)   val contribs = links.join(ranks)         // join  -> RDD1
-    (2)          .values                           // extract values from RDD1 -> RDD2          
-    (3)          .flatMap{ case (urls, rank) =>    // RDD2 -> conbrib RDD
-                       val size = urls.size        
-    (4)                   urls.map(url => (url, rank / size))   // the ranks are distributed equally amongs the various URLs
-                 }
-    (5)   ranks = contribs.reduceByKey(_ + _).mapValues(0.15 + 0.85 * _) // ranks RDD
-    }
-    
-In line 1, the links RDD and the ranks RDD are joined together to form RDD1. Then the values of RDD1 are extracted to form RDD2. In line 3, RDD2 is flatmapped to generate the contrib RDD. Line 4, is a bit tricky to understand. Basically, each URL assigned rank is distributed evenly amongst the URLs it references. The diagram below depicts the various RDD generated and the corresponding key/value pairs produced in the first iteration. 
+      def createTree(dataset, features):
+          labels = [record[-1] for record in dataset]
+          if labels.count(labels[0]) == len(labels): 
+              return labels[0]            # stop splitting when all of the labels are equal
 
-<img src="/images/img-3.jpg" width="722" height="639">
+          if len(dataset[0]) == 1:        # stop splitting when there are no more features in dataset
+              mjcount = majorityCount(labels)
+              return (mjcount) 
 
-In the diagram below we depict the contributions and ranks in the first two iterations. In the first iteration, for example URL_3 references URL_1 & URL_2 so it contribution is 1/2 = 0.5 for each of the URLs it references. When the rank is calculated URL_3 get a rank of 0.57 (0.15 + 0.85 * 0.5). The 0.57 rank is then passed to the next contribution cycle. In the second iteration, the contribution of URL_3 is once again split in half 0.57 /2 = 0.285.
+          bestFeat = chooseBestFeatureToSplit(dataset)
+          bestFeatLabel = features[bestFeat]
+          featValues = {record[bestFeat] for record in dataset}     # put feature values into a set
+          subLabels = features[:]             # make a copy of features
+          del(subLabels[bestFeat])            # remove bestFeature from labels list
 
-<img src="/images/img-4.jpg" width="746" height="477">
-
-At the end of the 20 iterations the resultant ranks converges to the output distribution:
-
-     url_4 has rank: 1.3705281840649928.
-     url_2 has rank: 0.4613200524321036.
-     url_3 has rank: 0.7323900229505396.
-     url_1 has rank: 1.4357617405523626.
+          myTree = {bestFeatLabel:{}}         # value is empty dict
+          for value in featValues:
+              subDataset = splitDataset(dataset, bestFeat, value)
+              subTree = createTree(subDataset, subLabels)
+              myTree[bestFeatLabel].update({value: subTree})  # add (key,val) item into empty dict
+          return myTree  
  
  ### Concluding Remarks
 We can clearly see now after this deep dive that the PageRank sample program that comes with Spark 2.0 looks deceivingly simple. The code is both compact and efficient. To understand how things actually work requires a deeper understanding of Spark RDDs, Spark's Scala based functional API, as well as Page Ranking formula. Programming in Spark 2.0 requires unraveling those RDDs that are implicitly generated on your behalf. 
