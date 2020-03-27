@@ -208,13 +208,15 @@ When we look at the two subDataset groups for indx=0 we see that *non-surfacing*
 
 It is important to note the the choosen feature is not the one that creates the highest Entropy but rather the one that creates the least because information gain (purity) increases when Entropy decreases (because of the minus sign between baseEntropy and featEntropy).
 
-## Part 3: Looping and Building Tree
+## Part 3: Looping and Tree Building
  
-This part is the heart of the Decision Tree algorithm. In each recursive iteration, a new node is choosen to branch the tree and then a new set of sub-datasets are passed to the next iteration. The algorithm has 4 steps:
+This part is the heart of the Decision Tree algorithm. In each recursive iteration, a new node is choosen to branch the tree and then a new set of sub-datasets are passed to the next iteration. The algorithm has 6 steps:
   1- Start the algorithm with the full dataset and features
-  2- Calculate URL contribution: contrib = rank/size
-  3- Set each URL new rank = 0.15 + 0.85 x contrib
-  4- Iterate to step 2 with the new rank
+  2- Choose best feature to split on
+  3- 
+  4- Create an empty tree node
+  5- Create substree
+  6- Iterate to step 4 with for the split subdataset
 
 Here is the Spark code for the 4 steps above:
 
@@ -224,7 +226,7 @@ Here is the Spark code for the 4 steps above:
               return labels[0]            # stop splitting when all of the labels are equal
 
           if len(dataset[0]) == 1:        # stop splitting when there are no more features in dataset
-              mjcount = majorityCount(labels)
+              mjcount = max(labels,key=labels.count)
               return (mjcount) 
 
           bestFeat = chooseBestFeatureToSplit(dataset)
@@ -238,7 +240,8 @@ Here is the Spark code for the 4 steps above:
               subDataset = splitDataset(dataset, bestFeat, value)
               subTree = createTree(subDataset, subLabels)
               myTree[bestFeatLabel].update({value: subTree})  # add (key,val) item into empty dict
-          return myTree  
- 
+          return myTree    
+    
+        
  ### Concluding Remarks
 We can clearly see now after this deep dive that the PageRank sample program that comes with Spark 2.0 looks deceivingly simple. The code is both compact and efficient. To understand how things actually work requires a deeper understanding of Spark RDDs, Spark's Scala based functional API, as well as Page Ranking formula. Programming in Spark 2.0 requires unraveling those RDDs that are implicitly generated on your behalf. 
