@@ -211,14 +211,16 @@ It is important to note the the choosen feature is not the one that creates the 
 ## Part 3: Looping and Tree Building
  
 This part is the heart of the Decision Tree algorithm. In each recursive iteration, a new node is choosen to branch the tree and then a new set of sub-datasets are passed to the next iteration. The algorithm has 6 steps:
-  1- Start the algorithm with the full dataset and features
-  2- Choose best feature to split on
-  3- 
-  4- Create an empty tree node
-  5- Create substree
-  6- Iterate to step 4 with for the split subdataset
+  1- Start the algorithm with the a given dataset and a feature list
+  2- Check two recursion terminating conditions
+  3- Choose best feature to split given dataset
+  4- Make a copy of fetures values of best dataset & copy of the features list with best feature removed 
+  5- Create an empty tree node
+  6- Split given data set based on best feature & it values
+  7- Create subtree and append it to the main tree
+  8- Iterate to step 6 with for the all given values of best feature
 
-Here is the Spark code for the 4 steps above:
+Here is the Python code for the 8 steps above:
 
       def createTree(dataset, features):
           labels = [record[-1] for record in dataset]
@@ -242,6 +244,18 @@ Here is the Spark code for the 4 steps above:
               myTree[bestFeatLabel].update({value: subTree})  # add (key,val) item into empty dict
           return myTree    
     
-        
- ### Concluding Remarks
+To understand this recursive function it is important to understand the subdataset being generated and used in the next recursive call and understand the two terminating conditions.
+
+### Dataset Splitting
+At each level of the recursion a subdataset is passed to the function to generate the corresponding tree branch or leaf node.
+
+### Terminating Condition
+Recursion terminates and a leaf node is generated in the decision tree when either of these two conditions is reached:
+ 
+ 1- All labels in the dataset have same value
+ 2- No more features in the feature list 
+
+Let look back at the above dataset spliting to
+
+## Concluding Remarks
 We can clearly see now after this deep dive that the PageRank sample program that comes with Spark 2.0 looks deceivingly simple. The code is both compact and efficient. To understand how things actually work requires a deeper understanding of Spark RDDs, Spark's Scala based functional API, as well as Page Ranking formula. Programming in Spark 2.0 requires unraveling those RDDs that are implicitly generated on your behalf. 
