@@ -252,48 +252,48 @@ The following debugging output shows how at each level of the recursion a subdat
 Here we show how the 2 left leaf nodes 'maybe' and 'no' under non-surfacing = False are generated. 
 
       Dataset: [[1, 1, 'yes'], [1, 1, 'yes'], [1, 0, 'no'], [0, 1, 'no'], [0, 1, 'no'], [1, 1, 'maybe'], [0, 0, 'maybe']]
-      features:  ['non-surfacing', 'flippers']
       labels: ['yes', 'yes', 'no', 'no', 'no', 'maybe', 'maybe']
+      features:  ['non-surfacing', 'flippers']
       best Feature to split: non-surfacing (0)
 
       sub-dataset: [[1, 'no'], [1, 'no'], [0, 'maybe']]
-      features:  ['flippers']
       labels: ['no', 'no', 'maybe']
+      features:  ['flippers']
       best Feature to split: flippers (0)
 
       suf-dataset: [['maybe']]
+      labels: ['maybe']      
       features:  []
-      labels: ['maybe']
       leaf node: maybe
       ===========
 
       sub-dataset: [['no'], ['no']]
+      labels: ['no', 'no']      
       features:  []
-      labels: ['no', 'no']
       leaf node: no
       ===========
 
 Here we show how the 2 right leaf nodes 'no' and 'yes' under non-surfacing = True are generated. 
 
       Dataset: [[1, 1, 'yes'], [1, 1, 'yes'], [1, 0, 'no'], [0, 1, 'no'], [0, 1, 'no'], [1, 1, 'maybe'], [0, 0, 'maybe']]
-      features:  ['non-surfacing', 'flippers']
       labels: ['yes', 'yes', 'no', 'no', 'no', 'maybe', 'maybe']
+      features:  ['non-surfacing', 'flippers']
       best Feature to split: non-surfacing (0)
 
       sub-dataset: [[1, 'yes'], [1, 'yes'], [0, 'no'], [1, 'maybe']]
-      features:  ['flippers']
       labels: ['yes', 'yes', 'no', 'maybe']
+      features:  ['flippers']
       best Feature to split: flippers (0)
 
       sub-dataset: [['no']]
-      features:  []
       labels: ['no']
+      features:  []
       leaf node: no
       ===========
 
       sub-dataset: [['yes'], ['yes'], ['maybe']]
+      labels: ['yes', 'yes', 'maybe']      
       features:  []
-      labels: ['yes', 'yes', 'maybe']
       leaf node: yes
       ===========
       
