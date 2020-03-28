@@ -246,10 +246,57 @@ Here is the Python code for the 8 steps:
     
 To understand this recursive function it is important to understand the subdataset being generated and used in the next recursive call and understand the two terminating conditions.
 
-
 ### Dataset Splitting
-At each level of the recursion a subdataset is passed to the function to generate the corresponding tree branch or leaf node.
-Specifically the algorithm searches for patterns in its given dataset by comparing information gain for each feature. It peforms an entropy test that discriminates between features and then chooses the one that can best split the given dataset into sub-datasets. 
+The following debugging output shows how at each level of the recursion a subdataset is passed to the function to generate the corresponding tree branch or leaf node.  
+
+Here we show how the 2 left leaf nodes 'maybe' and 'no' under non-surfacing = False are generated. 
+
+      Dataset: [[1, 1, 'yes'], [1, 1, 'yes'], [1, 0, 'no'], [0, 1, 'no'], [0, 1, 'no'], [1, 1, 'maybe'], [0, 0, 'maybe']]
+      features:  ['non-surfacing', 'flippers']
+      labels: ['yes', 'yes', 'no', 'no', 'no', 'maybe', 'maybe']
+      best Feature to split: non-surfacing (0)
+
+      sub-dataset: [[1, 'no'], [1, 'no'], [0, 'maybe']]
+      features:  ['flippers']
+      labels: ['no', 'no', 'maybe']
+      best Feature to split: flippers (0)
+
+      suf-dataset: [['maybe']]
+      features:  []
+      labels: ['maybe']
+      leaf node: maybe
+      ===========
+
+      sub-dataset: [['no'], ['no']]
+      features:  []
+      labels: ['no', 'no']
+      leaf node: no
+      ===========
+
+Here we show how the 2 right leaf nodes 'no' and 'yes' under non-surfacing = True are generated. 
+
+      Dataset: [[1, 1, 'yes'], [1, 1, 'yes'], [1, 0, 'no'], [0, 1, 'no'], [0, 1, 'no'], [1, 1, 'maybe'], [0, 0, 'maybe']]
+      features:  ['non-surfacing', 'flippers']
+      labels: ['yes', 'yes', 'no', 'no', 'no', 'maybe', 'maybe']
+      best Feature to split: non-surfacing (0)
+
+      sub-dataset: [[1, 'yes'], [1, 'yes'], [0, 'no'], [1, 'maybe']]
+      features:  ['flippers']
+      labels: ['yes', 'yes', 'no', 'maybe']
+      best Feature to split: flippers (0)
+
+      sub-dataset: [['no']]
+      features:  []
+      labels: ['no']
+      leaf node: no
+      ===========
+
+      sub-dataset: [['yes'], ['yes'], ['maybe']]
+      features:  []
+      labels: ['yes', 'yes', 'maybe']
+      leaf node: yes
+      ===========
+      
 
 ### Terminating Condition
 Recursion terminates and a leaf node is generated in the decision tree when either of these two conditions is reached:
