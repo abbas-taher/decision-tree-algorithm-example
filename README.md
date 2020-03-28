@@ -92,7 +92,7 @@ This test runs along the right most branch of the tree and terminates at the yes
     non-surfacing = 0 ; flippers = 0 
     isFish = maybe
     
-can be used to traverse the left most branch of the tree because both feature columns are False (0). In this case, the branch ends at the *maybe* leave node. 
+can be used to traverse the left most branch of the tree because both feature columns are False (0). In this case, the branch ends at the *maybe* leaf node. 
    
 
 ## Creating Decsion Tree: How machine learning algorithm works
@@ -100,9 +100,9 @@ The **createTree algorithm** builds a decision tree recursively. The algorithm i
 
  - Entropy test to compare information gain in a given data pattern
  - Dataset spliting performed according to the entropy test
- - Growing dict data structure that represents the decision tree
+ - Growing dict structure to represents the decision tree
 
-In each recursive iteration in *createTree* function, the algorithm searches for patterns in its given dataset by comparing information gain for each feature. It peforms an entropy test that discriminates between features and then chooses the one that can best split the given dataset into sub-datasets. The algorithm then calls itself recursively to do the pattern search, entropy test and spliting on the new sub-datasets. Recursion terminates and the tree branch is rolled when there are no more features to split in the sub-dataset or when all the prediction labels are the same.
+In each recursive iteration of the *createTree* function, the algorithm searches for patterns in its given dataset by comparing information gain for each feature. It peforms an entropy test that discriminates between features and then chooses the one that can best split the given dataset into sub-datasets. The algorithm then calls itself recursively to do the pattern search, entropy test and spliting on the new sub-datasets. Recursion terminates and the tree branch is rolled when there are no more features to split in the sub-dataset or when all the prediction labels are the same.
 
 The rest of the article will take a deeper look at the Python code that implements the algorithm. The code looks deceivingly simple but to understand how things actually work requires a deeper understanding of recursion, Python's list spliting, as well as understanding how Entropy works. 
 
@@ -120,13 +120,13 @@ The code for calculating Entropy for the labels in a given dataset:
                entropy -= probability * log(probability,2)   # log base 2
            return entropy 
 
-There are two main loops in the function. Loop (1) calculates the frequency of each label and Loop (2) calculates Entropy for those labels using the below formula:
+There are two main for-loops in the function. Loop (1) calculates the frequency of each label and Loop (2) calculates Entropy for those labels using the below formula:
  
 &nbsp; &nbsp; &nbsp; H(X) = - &sum;<sub>i</sub> P<sub>X</sub>(x<sub>i</sub>) * log<sub>2</sub> (P<sub>X</sub>(x<sub>i</sub>))
 
 To compute Entropy H(X) for a given variable X with possible values x<sub>i</sub> we take the negative sum of the product of probability P<sub>X</sub>(x<sub>i</sub>) with the log base 2 of that same probability value. 
 
-Because Entropy uses probability in its formula, it is in a way a measure disorder in the data, the greater the Entropy the higher is the randomness in the data. This means, that when a data source produces a low-probability event, that event carries more "information" than when that data source produces a high-probability one. For example, if we take the all seven records and measure baseEntropy for all labels we get: 
+Because Entropy uses probability in its formula, it measures certain disorder in the data, the greater the Entropy the higher is the disorder in the data. This means, that when a certain dataset includes a high-probability event (data patterns occuring frequently, that event carries less Entropy than when that data pattern occurs more often (low-probability event). For example, if we take the all seven records and measure baseEntropy for all labels we get: 
       
       # labels = [yes,yes,no,no,no,maybe,maybe]
       $ python
@@ -143,7 +143,7 @@ If we drop the last two records and their corresponding *maybe* labels then Entr
       >>> print (entropy)
       0.9709505944546686
 
-If we compute Entropy for a any single record (drop all other 6 records) we get a zero Entropy value:
+If we compute Entropy for a any one record (drop all other 6 records) we get zero Entropy value because the is no variety in the data at all:
 
       # labels = [yes]
       >>> entropy = calculateEntropy(dataset[:-6])
