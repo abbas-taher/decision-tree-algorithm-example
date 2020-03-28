@@ -3,7 +3,7 @@
 
 The Python code for a Decision-Tree ([*decisiontreee.py*](/decisiontree.py?raw=true "Decision Tree")) is a good example to learn how a basic machine learning algorithm works. The [*inputdata.py*](/inputdata.py?raw=true "Input Data") is used by the **createTree algorithm** to generate a simple decision tree that can be used for prediction purposes. The data and code presented here are a modified version of the [original code](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in Chapter 3 of his book: **Machine Learning in Action**.
 
-In this discussion we shall take a deep dive into how the algorithm runs and try to understand how the [Python dict tree](/output.tree?raw=true "Decision Tree") structure depicted in the graph below is generated. 
+In this discussion we shall take a deep dive into how the algorithm runs and try to understand how the [Python dict tree](/output.tree?raw=true "Decision Tree") structure depicted in the graph below is generated recursively. 
 
 <img src="/images/decision-tree.png" width="709" height="425">
 
@@ -38,9 +38,9 @@ Or you can execute it from within the Python shell using the following commands:
       >>> decisiontree.pprintTree(tree)
       
 ## Input Dataset Description
-The *createDataset* function generates sample records for 7 species: 2 fish, 3 not fish and 2 maybe. The data contains two input feature columns: *non-surfacing* and *flippers* and a 3rd prediction label column: *isfish*. (Note: *non-surfacing* means the specie can survive without coming to the surface of the water) 
+The *createDataset* function generates sample records for 7 species: 2 fish, 3 not fish and 2 maybe. The dataset contains two input feature columns: *non-surfacing* and *flippers* and a 3rd prediction label column: *isfish*. (Note: *non-surfacing* means the specie can survive without coming to the surface of the water) 
 
-     dataSet = [[1, 1, 'yes'], [1, 1, 'yes'], 
+     dataset = [[1, 1, 'yes'], [1, 1, 'yes'], 
                 [1, 0, 'no'],  [0, 1, 'no'],  [0, 1, 'no'], 
                 [1, 1, 'maybe'], [0, 0, 'maybe']]
      
@@ -57,7 +57,7 @@ The *createDataset* function generates sample records for 7 species: 2 fish, 3 n
        False(1)        False(0)       maybe
 
 ## Program Output: The Decision Tree dict
-The machine learning program builds a Python dictionary that represents the graph of a tree. If we run the **createTree** function with the input dataset we get the following pretty print output, which is idential to the tree diagram above: <br>
+The machine learning program recursively builds a Python dictionary which represents the graph of a tree. If we run the **createTree** function with the input dataset we get the following pretty print output, which is identical to the tree diagram shown above:
 
     # output as dict
     {'non-surfacing': {0: {'flippers': {0: 'maybe', 1: 'no'}}, 
@@ -78,7 +78,7 @@ The machine learning program builds a Python dictionary that represents the grap
       |    
 
 ## Traversing Decision Tree: Case example
-We stat first by explaining how the decision tree relates to the input data and in the following sections we shall describe how the tree is created by the machine learning algorithm. 
+We start first by explaining how the decision tree relates to the input data and in the following sections we shall describe how the tree is created by the machine learning algorithm. 
 
 Looking at the tree diagram we clearly see that the root node first tests whether the specie is non-surfacing. Then it tests in each case (True or False) if the specie has flippers. There are 4 possible decision cases: maybe, no, no, yes each can be reached based on the given input data. For example:
 
