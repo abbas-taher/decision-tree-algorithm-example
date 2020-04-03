@@ -10,20 +10,20 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
 
 ## Contents:
 - Historical Note
-- Running the Decision-Tree Program
-- Input Dataset Description
-- Program Output: The Decision Tree dict
-- Traversing Decision Tree: Case Example
+- Running Create Tree Program
++ Program Input: Dataset Description
++ Program Output: Decision Tree dict
 - Creating Decsion Tree: How machine learning algorithm works
 - Part 1: Calculating Entropy
 - Part 2: Choosing Best Feature To Branch Tree
 - Part 3: Creating Tree - Choosing Tree Root
 - Part 3: Looping and Splitting into Subtrees
+- Traversing Decision Tree: Case Example
 
 ## Historical Note
 Machine learning decision trees were first formalized by [John Ross Quinlan](https://en.wikipedia.org/wiki/Ross_Quinlan) during the years 1982-1985. Along linear and logistic regression, decision trees (with their modern version of random forests) are considered the easiest and the most commonly used machine learning algorithms. 
 
-## Running the Decision-Tree Program
+## Running Create Tree Program
 To execute the main function you can just run the decisiontree.py program using a call to Python via the command line:
 
       $ python decisiontree.py
@@ -37,7 +37,7 @@ Or you can execute it from within the Python shell using the following commands:
       >>> tree = decisiontree.createTree(dataset, features)
       >>> decisiontree.pprintTree(tree)
       
-## Input Dataset Description
+### Program Input: Dataset Description
 The *createDataset* function generates sample records for 7 species: 2 fish, 3 not fish and 2 maybe. The dataset contains two input feature columns: *non-surfacing* and *flippers* and a 3rd prediction label column: *isfish*. (Note: *non-surfacing* means the specie can survive without coming to the surface of the water) 
 
      dataset = [[1, 1, 'yes'], [1, 1, 'yes'], 
@@ -56,7 +56,7 @@ The *createDataset* function generates sample records for 7 species: 2 fish, 3 n
        True(1)         True(1)        maybe
        False(1)        False(0)       maybe
 
-## Program Output: The Decision Tree dict
+### Program Output: Decision Tree dict
 The machine learning program recursively builds a Python dictionary which represents the graph of a tree. If we run the **createTree** function with the input dataset we get the following pretty print output, which is identical to the tree diagram shown above:
 
     # output as dict
