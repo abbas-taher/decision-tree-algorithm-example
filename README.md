@@ -11,13 +11,13 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
 ## Contents:
 - Historical Note
 - Running Create Tree Program
- - Program Input: Dataset Description
- - Program Output: Decision Tree dict
+   - Program Input: Dataset Description
+   - Program Output: Decision Tree dict
 - Creating Decsion Tree: How machine learning algorithm works
- - Part 1: Calculating Entropy
- - Part 2: Choosing Best Feature To Branch Tree
- - Part 3: Creating Tree - Choosing Tree Root
- - Part 3: Looping and Splitting into Subtrees
+   - Part 1: Calculating Entropy
+   - Part 2: Choosing Best Feature To Branch Tree
+   - Part 3: Creating Tree - Choosing Tree Root
+   - Part 4: Looping and Splitting into Subtrees
 - Traversing Decision Tree: Case Example
 - Making Prediction / Classification
 
