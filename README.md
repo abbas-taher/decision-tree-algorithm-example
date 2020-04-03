@@ -11,14 +11,15 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
 ## Contents:
 - Historical Note
 - Running Create Tree Program
-+ Program Input: Dataset Description
-+ Program Output: Decision Tree dict
+ - Program Input: Dataset Description
+ - Program Output: Decision Tree dict
 - Creating Decsion Tree: How machine learning algorithm works
-- Part 1: Calculating Entropy
-- Part 2: Choosing Best Feature To Branch Tree
-- Part 3: Creating Tree - Choosing Tree Root
-- Part 3: Looping and Splitting into Subtrees
+ - Part 1: Calculating Entropy
+ - Part 2: Choosing Best Feature To Branch Tree
+ - Part 3: Creating Tree - Choosing Tree Root
+ - Part 3: Looping and Splitting into Subtrees
 - Traversing Decision Tree: Case Example
+- Making Prediction / Classification
 
 ## Historical Note
 Machine learning decision trees were first formalized by [John Ross Quinlan](https://en.wikipedia.org/wiki/Ross_Quinlan) during the years 1982-1985. Along linear and logistic regression, decision trees (with their modern version of random forests) are considered the easiest and the most commonly used machine learning algorithms. 
@@ -76,24 +77,7 @@ The machine learning program recursively builds a Python dictionary which repres
       | | | 1: yes
       | | 
       |    
-
-## Traversing Decision Tree: Case example
-We start first by explaining how the decision tree relates to the input data and in the following sections we shall describe how the tree is created by the machine learning algorithm. 
-
-Looking at the tree diagram we clearly see that the root node first tests whether the specie is non-surfacing. Then it tests in each case (True or False) if the specie has flippers. There are 4 possible decision cases: maybe, no, no, yes each can be reached based on the given input data. For example:
-
-    A specie isFish = Yes if and only if:
-      - non-surfacing = 1
-      - flippers = 1
-
-This test runs along the right most branch of the tree and terminates at the yes node at the bottom. Overall using a decision-tree is simple, you take any data record and start traversing the tree based on the values of the feature columns.  For example, the two features of the 7th data records: 
- 
-    [0, 0, 'maybe']   # 7th data records
-    non-surfacing = 0 ; flippers = 0 
-    isFish = maybe
-    
-can be used to traverse the left most branch of the tree because both feature columns are False (0). In this case, the branch ends at the *maybe* leaf node. 
-   
+  
 
 ## Creating Decsion Tree: How machine learning algorithm works
 The **createTree algorithm** builds a decision tree recursively. The algorithm is composed of 3 main components:
@@ -306,6 +290,23 @@ Recursion terminates and a leaf node is generated in the decision tree when eith
 
 Let look back at the above dataset spliting to
 The algorithm then calls itself recursively to do the pattern search, entropy test and spliting on the new sub-datasets. Recursion terminates and the tree branch is rolled when there are no more features to split in the sub-dataset or when all the prediction labels are the same.
+
+## Traversing Decision Tree: Case example
+We start first by explaining how the decision tree relates to the input data and in the following sections we shall describe how the tree is created by the machine learning algorithm. 
+
+Looking at the tree diagram we clearly see that the root node first tests whether the specie is non-surfacing. Then it tests in each case (True or False) if the specie has flippers. There are 4 possible decision cases: maybe, no, no, yes each can be reached based on the given input data. For example:
+
+    A specie isFish = Yes if and only if:
+      - non-surfacing = 1
+      - flippers = 1
+
+This test runs along the right most branch of the tree and terminates at the yes node at the bottom. Overall using a decision-tree is simple, you take any data record and start traversing the tree based on the values of the feature columns.  For example, the two features of the 7th data records: 
+ 
+    [0, 0, 'maybe']   # 7th data records
+    non-surfacing = 0 ; flippers = 0 
+    isFish = maybe
+    
+can be used to traverse the left most branch of the tree because both feature columns are False (0). In this case, the branch ends at the *maybe* leaf node. 
 
 ## Concluding Remarks
 We can clearly see now after this deep dive that the PageRank sample program that comes with Spark 2.0 looks deceivingly simple. The code is both compact and efficient. To understand how things actually work requires a deeper understanding of Spark RDDs, Spark's Scala based functional API, as well as Page Ranking formula. Programming in Spark 2.0 requires unraveling those RDDs that are implicitly generated on your behalf. 
