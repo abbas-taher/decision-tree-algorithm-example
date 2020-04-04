@@ -1,7 +1,7 @@
 ## Tutorial 101: Decision Tree 
 ### Understanding the Algorithm: Simple Implementation Code Example 
 
-The Python code for a Decision-Tree ([*decisiontreee.py*](/decisiontree.py?raw=true "Decision Tree")) is a good example to learn how a basic machine learning algorithm works. The [*inputdata.py*](/inputdata.py?raw=true "Input Data") is used by the **createTree algorithm** to generate a simple decision tree that can be used for prediction purposes. The data and code presented here are a modified version of the [original code](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in Chapter 3 of his book: **Machine Learning in Action**.
+The Python code for a Decision-Tree ([*decisiontreee.py*](/decisiontree.py?raw=true)) is a good example to learn how a basic machine learning algorithm works. The [*inputdata.py*](/inputdata.py?raw=true "Input Data") is used by the **createTree algorithm** to generate a simple decision tree that can be used for prediction purposes. The data and code presented here are a modified version of the [original code](https://github.com/pbharrin/machinelearninginaction3x/blob/master/Ch03/trees.py) given by Peter Harrington in Chapter 3 of his book: **Machine Learning in Action**.
 
 In this discussion we shall take a deep dive into how the algorithm runs and try to understand how the [Python dict tree](/output.tree?raw=true "Decision Tree") structure depicted in the graph below is generated recursively. 
 
@@ -19,13 +19,13 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
    - Part 3: Creating Tree - Choosing Tree Root
    - Part 4: Looping and Splitting into Subtrees
 - Traversing Decision Tree: Case Example
-- Making Prediction / Classification
+- Classification: Making Prediction
 
 ## Historical Note
 Machine learning decision trees were first formalized by [John Ross Quinlan](https://en.wikipedia.org/wiki/Ross_Quinlan) during the years 1982-1985. Along linear and logistic regression, decision trees (with their modern version of random forests) are considered the easiest and the most commonly used machine learning algorithms. 
 
 ## Running Create Tree Program
-To execute the main function you can just run the decisiontree.py program using a call to Python via the command line:
+To execute the main function you can just run the [*decisiontreee.py*](/decisiontree.py?raw=true "Decision Tree") program using a call to Python via the command line:
 
       $ python decisiontree.py
       
@@ -208,11 +208,13 @@ Here is the Python code for the 8 steps:
 
       def createTree(dataset, features):
           labels = [record[-1] for record in dataset]
-          if labels.count(labels[0]) == len(labels): 
-              return labels[0]            # stop splitting when all of the labels are equal
-
-          if len(dataset[0]) == 1:        # stop splitting when there are no more features in dataset
-              mjcount = max(labels,key=labels.count)
+          
+          # Terminating condition #1
+          if labels.count(labels[0]) == len(labels):  # stop splitting when all of the labels are same 
+              return labels[0]      
+          # Terminating condition #2    
+          if len(dataset[0]) == 1:                    # stop splitting when there are no more features in dataset
+              mjcount = max(labels,key=labels.count)  # select majority count 
               return (mjcount) 
 
           bestFeat = chooseBestFeatureToSplit(dataset)
@@ -228,10 +230,10 @@ Here is the Python code for the 8 steps:
               myTree[bestFeatLabel].update({value: subTree})  # add (key,val) item into empty dict
           return myTree    
     
-To understand this recursive function it is important to understand the subdataset being generated and used in the next recursive call and understand the two terminating conditions.
+To understand this recursive function it is important to examine the sub-dataset being generated and used in each recursive call as well as understand when the two terminating conditions stop the recursion.
 
-### Dataset Splitting
-The following debugging output shows how at each level of the recursion a subdataset is passed to the function to generate the corresponding tree branch or leaf node.  
+### Debugging Dataset Splitting
+The following debugging output shows how at each level of the recursion a sub-dataset is passed to the function to generate the corresponding subtree branch or leaf node.  
 
 Here we show how the 2 left leaf nodes 'maybe' and 'no' under non-surfacing = False are generated. 
 
@@ -283,13 +285,32 @@ Here we show how the 2 right leaf nodes 'no' and 'yes' under non-surfacing = Tru
       
 
 ### Terminating Condition
-Recursion terminates and a leaf node is generated in the decision tree when either of these two conditions is reached:
- 
- 1- All labels in the dataset have same value
- 2- No more features in the feature list 
+When recursion terminates two things happen: (i) a leaf node is generated in the decision tree and (ii) the recursion start to backtrack and the subtree branch gets created. 
 
-Let look back at the above dataset spliting to
-The algorithm then calls itself recursively to do the pattern search, entropy test and spliting on the new sub-datasets. Recursion terminates and the tree branch is rolled when there are no more features to split in the sub-dataset or when all the prediction labels are the same.
+Here are the 2 terminating conditions which describe in words the code in createTree function:
+ 
+ Condition #1: All labels in the dataset have same value
+ Condition #2: No more features in the feature list 
+
+Simply, recursion terminates and the tree branch is rolled when all the given labels are the same or when there are no more features to split in the given sub-dataset.
+
+Lets correlate the printout from debugging the dataset spliting section with the code for the two condition. There are 4 leaf nodes \[maybe,no,no,yes] the 1st 3 of which are generated by terminating condition #1 and the yes leaf node is generated by condition #2.  
+
+      sub-dataset: [['no'], ['no']]    # condition #1 applies
+      labels: ['no', 'no']      
+      features:  []
+      leaf node: no
+      ===========
+
+      sub-dataset: [['yes'], ['yes'], ['maybe']]   # condition #2 applies
+      labels: ['yes', 'yes', 'maybe']      
+      features:  []
+      leaf node: yes
+      ===========
+
+Generating the yes leaf node is a little tricky because here as you see we have three labels: two yeses & one maybe. Natuarally in this case the algorithm choose yes because it occurs more often. 
+
+    mjcount = max(labels,key=labels.count)
 
 ## Traversing Decision Tree: Case example
 We start first by explaining how the decision tree relates to the input data and in the following sections we shall describe how the tree is created by the machine learning algorithm. 
@@ -307,6 +328,43 @@ This test runs along the right most branch of the tree and terminates at the yes
     isFish = maybe
     
 can be used to traverse the left most branch of the tree because both feature columns are False (0). In this case, the branch ends at the *maybe* leaf node. 
+
+
+## Classification: Making Prediction
+Here is the Python code for making predictions:
+
+    def predict(inputTree, features, testVec):
+
+       def classify (inputTree, testDict):
+           (key, subtree), = inputTree.items()
+           testValue = testDict.pop(key)
+           if len(testDict) == 0:
+               return subtree[testValue]
+           else:
+               return classify(subtree[testValue], testDict)
+
+       testDict = dict(zip(features, testVec))
+       return classify(inputTree, testDict)
+
+To make redictions you can run the following:
+
+      $ python 
+      >>> import decisiontree
+      >>> import inputdata
+      >>> dataset, features = inputdata.createDataset()
+      >>> tree = decisiontree.createTree(dataset, features)
+      >>> decisiontree.predict(tree, [0,0],[1,1])
+      
+Eventhough this looks benign and simple, there are however hidden complexities in this choice. Specifically, when we try to make predictions given this data sample for example:
+
+    [1, 1]   # input for classification 
+    
+In this case the decision tree returns yes despite the fact that our original data had a yes and a maybe with \[1,1].
+
+    [1, 1, 'yes'], 
+    [1, 1, 'maybe']
+
+What I mean here is that the decision tree has decided to classify all \[1,1] as yes and a maybe is only returned when the data is \[0,0]
 
 ## Concluding Remarks
 We can clearly see now after this deep dive that the PageRank sample program that comes with Spark 2.0 looks deceivingly simple. The code is both compact and efficient. To understand how things actually work requires a deeper understanding of Spark RDDs, Spark's Scala based functional API, as well as Page Ranking formula. Programming in Spark 2.0 requires unraveling those RDDs that are implicitly generated on your behalf. 
