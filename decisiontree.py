@@ -24,6 +24,8 @@ non-surfacing:
  | | | 1: yes
  | | 
  | 
+ 
+ maybe,no,no,yes,
 """
 
 from math import log
