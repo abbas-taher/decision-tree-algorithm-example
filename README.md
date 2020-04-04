@@ -18,7 +18,7 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
    - Part 2: Choosing Best Feature To Branch Tree
    - Part 3: Creating Tree - Choosing Tree Root
    - Part 4: Looping and Splitting into Subtrees
-- Traversing Decision Tree: Case Example
+- Traversing Decision Tree: Case Examples
 - Classification: Making Prediction
 
 ## Historical Note
@@ -308,26 +308,9 @@ Lets correlate the printout from debugging the dataset spliting section with the
       leaf node: yes
       ===========
 
-Generating the yes leaf node is a little tricky because here as you see we have three labels: two yeses & one maybe. Natuarally in this case the algorithm choose yes because it occurs more often. 
+Generating the yes leaf node is a little tricky because here as you see we have three labels: two yeses & one maybe. Natuarally in this case the algorithm choose yes because it occurs more often which translates to using the max Python function in the code.
 
     mjcount = max(labels,key=labels.count)
-
-## Traversing Decision Tree: Case example
-We start first by explaining how the decision tree relates to the input data and in the following sections we shall describe how the tree is created by the machine learning algorithm. 
-
-Looking at the tree diagram we clearly see that the root node first tests whether the specie is non-surfacing. Then it tests in each case (True or False) if the specie has flippers. There are 4 possible decision cases: maybe, no, no, yes each can be reached based on the given input data. For example:
-
-    A specie isFish = Yes if and only if:
-      - non-surfacing = 1
-      - flippers = 1
-
-This test runs along the right most branch of the tree and terminates at the yes node at the bottom. Overall using a decision-tree is simple, you take any data record and start traversing the tree based on the values of the feature columns.  For example, the two features of the 7th data records: 
- 
-    [0, 0, 'maybe']   # 7th data records
-    non-surfacing = 0 ; flippers = 0 
-    isFish = maybe
-    
-can be used to traverse the left most branch of the tree because both feature columns are False (0). In this case, the branch ends at the *maybe* leaf node. 
 
 
 ## Classification: Making Prediction
@@ -346,18 +329,40 @@ Here is the Python code for making predictions:
        testDict = dict(zip(features, testVec))
        return classify(inputTree, testDict)
 
-To make redictions you can run the following:
+The program is recursive with a nested function. Basically, the input features and test vector are transformed into a dict which is then used to traverse the given tree. At each recursion step the associated dict item is poped and the recursion continues into the sub-tree associated with the dict item that was poped.
+
+To make predictions you can run the following:
 
       $ python 
       >>> import decisiontree
       >>> import inputdata
       >>> dataset, features = inputdata.createDataset()
       >>> tree = decisiontree.createTree(dataset, features)
-      >>> decisiontree.predict(tree, [0,0],[1,1])
       
-Eventhough this looks benign and simple, there are however hidden complexities in this choice. Specifically, when we try to make predictions given this data sample for example:
+      >>> decisiontree.predict(tree, features, [0,0])   
+      maybe
+      
+      >>> decisiontree.predict(tree, features, [1,1])
+      yes
+     
+### Traversing Decision Tree: Case examples
+Here we try to explain how the decision tree relates to the input data. Looking at the tree diagram depicted at the start of the post, we clearly see that the root node first tests whether the specie is non-surfacing. Then it tests in each case (True or False) if the specie has flippers. There are 4 possible decision cases: maybe, no, no, yes each can be reached based on the given input data. 
 
-    [1, 1]   # input for classification 
+For example, the two features of the 7th data records: 
+ 
+    [0, 0, 'maybe']   # 7th data records
+    non-surfacing = 0 ; flippers = 0 
+    isFish = maybe
+    
+can be used to traverse the left most branch of the tree because both feature columns are False (0). In this case, the branch ends at the *maybe* leaf node. In another example:
+
+    A specie isFish = Yes if and only if:
+      - non-surfacing = 1
+      - flippers = 1
+
+the test runs along the right most branch of the tree and terminates at the yes node at the bottom. Eventhough the test for yes leaf node looks benign and simple, there is an important hidden issue here. Specifically, when we try to make predictions given  the following testVec:
+
+    [1, 1]   # testVec for classification 
     
 In this case the decision tree returns yes despite the fact that our original data had a yes and a maybe with \[1,1].
 
@@ -366,5 +371,7 @@ In this case the decision tree returns yes despite the fact that our original da
 
 What I mean here is that the decision tree has decided to classify all \[1,1] as yes and a maybe is only returned when the data is \[0,0]
 
+Overall using a decision-tree is simple, you take any data record and start traversing the tree based on the values of the feature columns. However, users should understand it special issues to full appreciate its limitations. 
+
 ## Concluding Remarks
-We can clearly see now after this deep dive that the PageRank sample program that comes with Spark 2.0 looks deceivingly simple. The code is both compact and efficient. To understand how things actually work requires a deeper understanding of Spark RDDs, Spark's Scala based functional API, as well as Page Ranking formula. Programming in Spark 2.0 requires unraveling those RDDs that are implicitly generated on your behalf. 
+We can clearly see now after this deep dive that the Decision Tree sample program looks deceivingly simple. The code is both compact and efficient. To understand how things actually work requires a deeper understanding of machine learning, Entropy, Python language as well as recursive programming. 
