@@ -1,165 +1,120 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Fri Mar 20 17:42:29 2020
+@author: abbas taher
 
-@author: abbas
+Based on:
+   Decision Tree Source Code for Machine Learning in Action Ch. 3
+   @author: Peter Harrington
+
+
+Output
+ {'non-surfacing': {0: {'flippers': {0: 'maybe', 1: 'no'}}, 1: {'flippers': {0: 'no', 1: 'yes'}}}} 
+
+non-surfacing: 
+ | 0: 
+ | | flippers: 
+ | | | 0: maybe
+ | | | 1: no
+ | | 
+ | 
+ | 1: 
+ | | flippers: 
+ | | | 0: no
+ | | | 1: yes
+ | | 
+ | 
 """
 
-'''
-Created on Oct 12, 2010
-Decision Tree Source Code for Machine Learning in Action Ch. 3
-@author: Peter Harrington
-'''
 from math import log
 from collections import defaultdict
 import json
+import pprint
 
-# {'no surfacing': {0: 'no', 1: {'flippers': {0: 'no', 1: 'yes'}}}}
-# {'no surfacing': {0: {'flippers': {'maybe': 'maybe', 'no': 'no'}}, 1: {'flippers': {0: 'no', 1: 'yes'}}}}
 
-def createDataset():
-    dataSet = [[1, 1, 'yes'],
-               [1, 1, 'yes'],
-               [1, 0, 'no'],
-               [0, 1, 'no'],
-               [0, 1, 'no'],
-               [0, 1, 'maybe'],
-               [1, 0, 'maybe']]
-    features = ['no surfacing','flippers']
-    return dataSet, features
+def calculateEntropy(dataset):
+    counter= defaultdict(int)   # number of unique labels and their frequency
+    for record in dataset:      
+        label = record[-1]      # always assuming last column is the label column 
+        counter[label] += 1
+    entropy = 0.0
+    for key in counter:
+        probability = counter[key]/len(dataset)           # len(dataSet) = number of entries   
+        entropy -= probability * log(probability,2)       # log base 2
+    return entropy
 
-def calcShannonEnt(dataSet):
-    numEntries = len(dataSet)
-    labelCounts = {}
-    for featVec in dataSet: #the the number of unique elements and their occurance
-        currentLabel = featVec[-1]
-        if currentLabel not in labelCounts.keys(): labelCounts[currentLabel] = 0
-        labelCounts[currentLabel] += 1
-    shannonEnt = 0.0
-    for key in labelCounts:
-        prob = float(labelCounts[key])/numEntries
-        shannonEnt -= prob * log(prob,2) #log base 2
-    return shannonEnt
-    
-def splitDataSet(dataSet, axis, value):
+def splitDataset(dataSet, axis, value):
     retDataSet = []
     for featVec in dataSet:
         if featVec[axis] == value:
-            reducedFeatVec = featVec[:axis]     #chop out axis used for splitting
+            reducedFeatVec = featVec[:axis]     # chop out axis used for splitting
             reducedFeatVec.extend(featVec[axis+1:])
             retDataSet.append(reducedFeatVec)
     return retDataSet
-    
-def chooseBestFeatureToSplit(dataSet):
-    numFeatures = len(dataSet[0]) - 1      #the last column is used for the labels
-    baseEntropy = calcShannonEnt(dataSet)
+
+def chooseBestFeatureToSplit(dataset):
+    baseEntropy = calculateEntropy(dataset)
     bestInfoGain = 0.0; bestFeature = -1
-    for i in range(numFeatures):        #iterate over all the features
-        featList = [example[i] for example in dataSet]#create a list of all the examples of this feature
-        uniqueVals = set(featList)       #get a set of unique values
-        newEntropy = 0.0
-        for value in uniqueVals:
-            subDataSet = splitDataSet(dataSet, i, value)
-            prob = len(subDataSet)/float(len(dataSet))
-            newEntropy += prob * calcShannonEnt(subDataSet)     
-        
-        infoGain = baseEntropy - newEntropy     # calculate the info gain; ie reduction in entropy
-        if (infoGain > bestInfoGain):           # compare this to the best gain so far
-            bestInfoGain = infoGain             # if better than current best, set to best
-            bestFeature = i
-    return bestFeature                      #returns an integer
-
-'''
-def majorityCnt(classList):
-    classCount={}
-    for vote in classList:
-        if vote not in classCount.keys(): classCount[vote] = 0
-        classCount[vote] += 1
-    sortedClassCount = sorted(classCount.items(), key=operator.itemgetter(1), reverse=True)
-    return sortedClassCount[0][0]
-'''
-
-def majorityCount(classList):
-    counter= defaultdict(int)
-    for key in classList:
-       counter[key] += 1     
-    sortedCounter = sorted(counter.items(), key=lambda tup: tup[1], reverse=True)  # [('no', 1), ('maybe', 1)]
-    return sortedCounter[0][0]    # take first 
+    
+    numFeat = len(dataset[0]) - 1          # do not include last label column     
+    for indx in range(numFeat):            # iterate over all the features index
+        featValues = {record[indx] for record in dataset}     # put feature values into a set
+        featEntropy = 0.0
+        for value in featValues:
+            subDataset = splitDataset(dataset, indx, value)      # split based on feature index and value
+            probability = len(subDataset)/float(len(dataset))
+            featEntropy += probability * calculateEntropy(subDataset) # sum Entropy for all feature values
+            #print (subDataset)
+        #print (indx, featEntropy)
+        infoGain = baseEntropy - featEntropy    # calculate the info gain; ie reduction in Entropy
+        if infoGain > bestInfoGain:             # compare this to the best gain so far
+            bestInfoGain = infoGain             # if better than current best, set it to best
+            bestFeature = indx
+    return bestFeature                          # return an best feature index
 
 
-def createTree(dataSet,labels):
-    classList = [example[-1] for example in dataSet]
-    print ("\nDataset: {}\nLabels:  {}\nclassList: {}".format(dataSet, labels, classList))
-    if classList.count(classList[0]) == len(classList): 
-        print ("node:", classList[0])
-        print ("===========")
-        return classList[0]         # stop splitting when all of the classes are equal
-        
-    if len(dataSet[0]) == 1:        # stop splitting when there are no more features in dataSet
-        mjcount = majorityCount(classList)
-        print ("mjnode:", mjcount)
-        print ("---------")
+def createTree(dataset, features):
+    labels = [record[-1] for record in dataset]
+    
+    # Terminating condition #1
+    if labels.count(labels[0]) == len(labels):   # stop splitting when all of the labels are same
+        return labels[0]            
+    # Terminating condition #2
+    if len(dataset[0]) == 1:                     # stop splitting when there are no more features in dataset
+        mjcount = max(labels,key=labels.count)   # select majority count
         return (mjcount) 
     
-    bestFeat = chooseBestFeatureToSplit(dataSet)
-    bestFeatLabel = labels[bestFeat]
+    bestFeat = chooseBestFeatureToSplit(dataset)
+    bestFeatLabel = features[bestFeat]
     print ("best Feature to split:", bestFeatLabel, f'({bestFeat})')
-    myTree = {bestFeatLabel:{}}
-    del(labels[bestFeat])
-    featValues = [example[bestFeat] for example in dataSet]
-    uniqueVals = set(featValues)
-    for value in uniqueVals:
-        subLabels = labels[:]       #copy all of labels, so trees don't mess up existing labels
-        myTree[bestFeatLabel][value] = createTree(splitDataSet(dataSet, bestFeat, value),subLabels)
+    featValues = {record[bestFeat] for record in dataset}     # put feature values into a set
+    subLabels = features[:]             # make a copy of features
+    del(subLabels[bestFeat])            # remove bestFeature from labels list
+    
+    myTree = {bestFeatLabel:{}}         # value is empty dict
+    for value in featValues:
+        subDataset = splitDataset(dataset, bestFeat, value)
+        subTree = createTree(subDataset, subLabels)
+        myTree[bestFeatLabel].update({value: subTree})  # add (key,val) item into empty dict
     return myTree                            
 
-"""
-def createTree(dataSet,labels):
-    classList = [example[-1] for example in dataSet]
-    
-    if classList.count(classList[0]) == len(classList): 
-        return classList[0]#stop splitting when all of the classes are equal
-    if len(dataSet[0]) == 1: #stop splitting when there are no more features in dataSet
-        return majorityCnt(classList)
-    
-    bestFeat = chooseBestFeatureToSplit(dataSet)
-    bestFeatLabel = labels[bestFeat]
-    myTree = {bestFeatLabel:{}}
-    del(labels[bestFeat])
-    featValues = [example[bestFeat] for example in dataSet]
-    uniqueVals = set(featValues)
-    for value in uniqueVals:
-        subLabels = labels[:]       #copy all of labels, so trees don't mess up existing labels
-        myTree[bestFeatLabel][value] = createTree(splitDataSet(dataSet, bestFeat, value),subLabels)
-    return myTree   
-"""    
-def classify(inputTree,featLabels,testVec):
-    firstStr = inputTree.keys()[0]
-    secondDict = inputTree[firstStr]
-    featIndex = featLabels.index(firstStr)
-    key = testVec[featIndex]
-    valueOfFeat = secondDict[key]
-    if isinstance(valueOfFeat, dict): 
-        classLabel = classify(valueOfFeat, featLabels, testVec)
-    else: classLabel = valueOfFeat
-    return classLabel
 
-def storeTree(inputTree,filename):
-    import pickle
-    fw = open(filename,'w')
-    pickle.dump(inputTree,fw)
-    fw.close()
+def predict(inputTree, features, testVec):
     
-def grabTree(filename):
-    import pickle
-    fr = open(filename)
-    return pickle.load(fr)
+    def classify (inputTree, testDict):
+        (key, subtree), = inputTree.items()
+        testValue = testDict.pop(key)
+        if len(testDict) == 0:
+            return subtree[testValue]
+        else:
+            return classify(subtree[testValue], testDict)
+            
+    testDict = dict(zip(features, testVec))
+    return classify(inputTree, testDict)
     
 
-
-def print_tree(tree):
-    print ('\n', tree, '\n')
+def pprintTree(tree):
+    pprint.pprint (tree)
     tree_str = json.dumps(tree, indent=4)
     tree_str = tree_str.replace("\n    ", "\n")
     tree_str = tree_str.replace('"', "")
@@ -167,16 +122,30 @@ def print_tree(tree):
     tree_str = tree_str.replace("{", "")
     tree_str = tree_str.replace("}", "")
     tree_str = tree_str.replace("    ", " | ")
-    tree_str = tree_str.replace("  ", " ")
-    
+    tree_str = tree_str.replace("  ", " ")    
     print (tree_str)
+
+
+def createDataset():
+    dataset = [[1, 1, 'yes'], [1, 1, 'yes'],
+               [1, 0, 'no'], [0, 1, 'no'], [0, 1, 'no'],
+               [1, 1, 'maybe'], [0, 0, 'maybe']]
+    
+    features = ['non-surfacing','flippers']
+    label = ['isfish']
+    return dataset, features
+
     
 def main():
-
-    data, features = createDataset()
-    tree = createTree(data, features)
-    print_tree (tree) 
+    dataset, features = createDataset()
+    tree = createTree(dataset, features)
+    pprintTree (tree) 
     
+    testVectors = [(0,0), (0,1),(1,0),(1,1)]
+    for vec in testVectors:
+        pred = predict(tree, features, vec)
+        print (pred, end =',')
+
 
 if __name__ == "__main__":
     main()
