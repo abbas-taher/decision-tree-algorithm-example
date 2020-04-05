@@ -58,7 +58,7 @@ The *createDataset* function generates sample records for 7 species: 2 fish, 3 n
        False(1)        False(0)       maybe
 
 ### Program Output: Decision Tree dict
-The machine learning program recursively builds a Python dictionary which represents the graph of a tree. If we run the **createTree** function with the input dataset we get the following pretty print output, which is identical to the tree diagram shown above:
+The machine learning program recursively builds a Python dictionary which represents the graph of a tree. If we run the **createTree** function with the input dataset we get the following pretty print [*output*](/decisiontree.py?raw=true "otput.txt"), which is identical to the tree diagram shown above:
 
     # output as dict
     {'non-surfacing': {0: {'flippers': {0: 'maybe', 1: 'no'}}, 
