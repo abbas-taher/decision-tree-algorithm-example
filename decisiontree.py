@@ -66,8 +66,7 @@ def chooseBestFeatureToSplit(dataset):
             subDataset = splitDataset(dataset, indx, value)      # split based on feature index and value
             probability = len(subDataset)/float(len(dataset))
             featEntropy += probability * calculateEntropy(subDataset) # sum Entropy for all feature values
-            #print (subDataset)
-        #print (indx, featEntropy)
+
         infoGain = baseEntropy - featEntropy    # calculate the info gain; ie reduction in Entropy
         if infoGain > bestInfoGain:             # compare this to the best gain so far
             bestInfoGain = infoGain             # if better than current best, set it to best
@@ -88,7 +87,6 @@ def createTree(dataset, features):
     
     bestFeat = chooseBestFeatureToSplit(dataset)
     bestFeatLabel = features[bestFeat]
-    print ("best Feature to split:", bestFeatLabel, f'({bestFeat})')
     featValues = {record[bestFeat] for record in dataset}     # put feature values into a set
     subLabels = features[:]             # make a copy of features
     del(subLabels[bestFeat])            # remove bestFeature from labels list
