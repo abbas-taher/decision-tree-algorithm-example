@@ -1,0 +1,19 @@
+{'non-surfacing': {0: {'flippers': {0: 'maybe', 1: 'no'}},
+                   1: {'flippers': {0: 'no', 1: 'yes'}}}}
+
+non-surfacing: 
+ | 0: 
+ | | flippers: 
+ | | | 0: maybe
+ | | | 1: no
+ | | 
+ | 
+ | 1: 
+ | | flippers: 
+ | | | 0: no
+ | | | 1: yes
+ | | 
+ | 
+
+
+maybe,no,no,yes,
