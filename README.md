@@ -16,9 +16,7 @@ In this discussion we shall take a deep dive into how the algorithm runs and try
 - Creating Decsion Tree: How machine learning algorithm works
    - Part 1: Calculating Entropy
    - Part 2: Choosing Best Feature To Branch Tree
-   - Part 3: Creating Tree - Choosing Tree Root
-   - Part 4: Looping and Splitting into Subtrees
-- Traversing Decision Tree: Case Examples
+   - Part 3: Looping and Tree Building
 - Classification: Making Prediction
 
 ## Historical Note
@@ -58,7 +56,7 @@ The *createDataset* function generates sample records for 7 species: 2 fish, 3 n
        False(1)        False(0)       maybe
 
 ### Program Output: Decision Tree dict
-The machine learning program recursively builds a Python dictionary which represents the graph of a tree. If we run the **createTree** function with the input dataset we get the following pretty print [*output*](/decisiontree.py?raw=true "otput.txt"), which is identical to the tree diagram shown above:
+The machine learning program recursively builds a Python dictionary which represents the graph of a tree. If we run the **createTree** function with the input dataset we get the following pretty print taken from the [*output.txt*](/output.txt?raw=true) file, which is identical to the tree diagram shown above:
 
     # output as dict
     {'non-surfacing': {0: {'flippers': {0: 'maybe', 1: 'no'}}, 
@@ -282,7 +280,6 @@ Here we show how the 2 right leaf nodes 'no' and 'yes' under non-surfacing = Tru
       features:  []
       leaf node: yes
       ===========
-      
 
 ### Terminating Condition
 When recursion terminates two things happen: (i) a leaf node is generated in the decision tree and (ii) the recursion start to backtrack and the subtree branch gets created. 
@@ -311,7 +308,6 @@ Lets correlate the printout from debugging the dataset spliting section with the
 Generating the yes leaf node is a little tricky because here as you see we have three labels: two yeses & one maybe. Natuarally in this case the algorithm choose yes because it occurs more often which translates to using the max Python function in the code.
 
     mjcount = max(labels,key=labels.count)
-
 
 ## Classification: Making Prediction
 Here is the Python code for making predictions:
