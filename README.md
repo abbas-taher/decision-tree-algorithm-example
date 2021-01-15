@@ -194,14 +194,14 @@ It is important to note the the choosen feature is not the one that creates the 
  
 This part is the heart of the Decision Tree algorithm. In each recursive iteration, a new node is choosen to branch the tree and then a new set of sub-datasets are passed to the next iteration. The algorithm has 8 steps:
 
-  1- Start the algorithm with the a given dataset and a feature list
-  2- Check two recursion terminating conditions
-  3- Choose best feature to split the given dataset using Entropy test
-  4- Make a copy of fetures values of best dataset & copy features list without best feature column 
-  5- Create an empty tree node
-  6- Split given dataset based on the best feature and its values
-  7- Grow subtree for the empty tree node and append it to the main tree
-  8- Iterate to step 6 with for the all given values for best feature
+  1. Start the algorithm with the a given dataset and a feature list
+  2. Check two recursion terminating conditions
+  3. Choose best feature to split the given dataset using Entropy test
+  4. Make a copy of fetures values of best dataset & copy features list without best feature column 
+  5. Create an emptytree node
+  6. Split given dataset based on the best feature and its values
+  7. Grow subtree for the empty tree node and append it to the main tree
+  8. Iterate to step 6 with for the all given values for best feature
 
 Here is the Python code for the 8 steps:
 
